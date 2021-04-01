@@ -1,0 +1,50 @@
+import React from 'react'
+import { Dimensions, SafeAreaView, StyleSheet, Text, View }  from 'react-native'
+
+export default props => {
+      
+    const style = StyleSheet.create({
+        component: {
+            backgroundColor: props.bgColor,
+            marginTop: Dimensions.get("screen").width * 0.05,
+            width: Dimensions.get("screen").width * 0.8,
+            height: Dimensions.get("screen").height * 0.1,
+            padding: 10,
+            marginLeft: Dimensions.get("screen").width * 0.1,
+            marginRight: Dimensions.get("screen").width * 0.1,
+            borderRadius: 10
+        },
+        centerComponent:{ 
+            flexGrow: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
+        TextStyle: {
+            color: '#fff'
+        },
+        totalInvestments: {
+            color: '#fff',
+            fontWeight: 'bold',
+        },
+        sideStats: {
+            marginTop: Dimensions.get("screen").width * 0.01,
+            flexDirection: 'row',
+            justifyContent: "space-between",
+        }
+    })
+
+    return (
+        <View style={style.component}>
+            <View style={style.centerComponent}>
+                <Text style={style.totalInvestments}>R$ {(props.totalInvestments).toLocaleString('en-US', {
+  style: 'currency',
+  currency: 'BRL',
+})}</Text>
+                <View style={style.sideStats}>
+                    <Text style={style.TextStyle}>Total em investimentos</Text>
+                </View>
+            </View>
+        </View>
+    )
+}
+
