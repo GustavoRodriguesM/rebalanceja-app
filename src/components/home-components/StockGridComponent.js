@@ -1,10 +1,12 @@
 import React from 'react'
-import { Dimensions, SafeAreaView, StyleSheet, Text, View }  from 'react-native'
+import { Dimensions, StyleSheet, Text, View }  from 'react-native'
+import BRLCurrencyFormat from '../../utils/BRLCurrencyFormat'
 
 export default props => {
     const style = StyleSheet.create({
         component: {
-            backgroundColor: props.bgColor,
+            borderColor: props.bgColor,
+            borderWidth: 1,
             marginTop: Dimensions.get("screen").width * 0.05,
             width: Dimensions.get("screen").width * 0.5,
             height: Dimensions.get("screen").height * 0.125,
@@ -25,16 +27,14 @@ export default props => {
     return (
         <View style={style.component}>
             <Text style={style.TextStyle}>
-                {props.brStock ? 'Ações Brasileiras' : false}
-                {props.extStock ? 'Ações Estrangeiras' : false}
-                {props.reits ? 'REITs' : false}
-                {props.brFiis ? 'FIIs' : false}
-                {props.fixedIncome ? 'Renda Fixa' : false}
+                {props.gridName}
             </Text>
-            <Text style={style.TextStyle}>R$ 50.000,00</Text>
+            <Text style={style.TextStyle}>
+                R$ {BRLCurrencyFormat(props.totalInvestment)}
+            </Text>
             <View style={style.sideStats}>
-                <Text style={style.TextStyle}>Atual: 20%</Text>
-                <Text style={style.TextStyle}>Meta: 15%</Text>
+                <Text style={style.TextStyle}>Atual: {props.actual || 0}%</Text>
+                <Text style={style.TextStyle}>Meta: {props.objective || 0}%</Text>
             </View>
         </View>
     )

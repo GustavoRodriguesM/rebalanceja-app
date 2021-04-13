@@ -1,11 +1,11 @@
 import React from 'react'
-import { Dimensions, SafeAreaView, StyleSheet, Text, View }  from 'react-native'
+import { Dimensions, StyleSheet, Text, View }  from 'react-native'
+import BRLCurrencyFormat from '../../utils/BRLCurrencyFormat'
 
 export default props => {
       
     const style = StyleSheet.create({
         component: {
-            backgroundColor: props.bgColor,
             marginTop: Dimensions.get("screen").width * 0.05,
             width: Dimensions.get("screen").width * 0.8,
             height: Dimensions.get("screen").height * 0.1,
@@ -20,9 +20,10 @@ export default props => {
             alignItems: 'center',
         },
         TextStyle: {
-            color: '#fff'
+            color: '#fff' // ffc70e
         },
         totalInvestments: {
+            fontSize: 24,
             color: '#fff',
             fontWeight: 'bold',
         },
@@ -36,10 +37,9 @@ export default props => {
     return (
         <View style={style.component}>
             <View style={style.centerComponent}>
-                <Text style={style.totalInvestments}>R$ {(props.totalInvestments).toLocaleString('en-US', {
-  style: 'currency',
-  currency: 'BRL',
-})}</Text>
+                <Text style={style.totalInvestments}>
+                    R$ {BRLCurrencyFormat(props.totalInvestments)}
+                </Text>
                 <View style={style.sideStats}>
                     <Text style={style.TextStyle}>Total em investimentos</Text>
                 </View>

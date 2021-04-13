@@ -1,10 +1,25 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { SafeAreaView, Text, View }  from 'react-native'
 
-export default props => {
-    return (
-        <View>
-            <Text>Stock Screen</Text>
-        </View>
-    )
+export default class StockScreen extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            email: '',
+            password: '',
+            name: '',
+            confirmPassword: '',
+            stageNew: false,
+            errorBadCredentials: false
+        };
+
+
+    }
+
+    render() {
+        return (
+            <Text>Teste</Text>
+        )
+    }
 }
