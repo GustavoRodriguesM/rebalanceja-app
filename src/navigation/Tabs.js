@@ -53,6 +53,7 @@ export default class Tabs extends Component {
                         marginBottom: 5,
                     },
                     style: {
+                        borderTopWidth: 0,
                         height: Dimensions.get("screen").height * 0.07
                     }
                 }}>
