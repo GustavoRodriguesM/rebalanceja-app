@@ -1,5 +1,6 @@
 import React from 'react'
 import { Dimensions, StyleSheet, Text, View }  from 'react-native'
+import { getPrimaryColor } from '../../styles/DefaultColors'
 import BRLCurrencyFormat from '../../utils/BRLCurrencyFormat'
 
 export default props => {
@@ -13,7 +14,8 @@ export default props => {
             height: Dimensions.get("screen").height * 0.125,
             padding: 10,
             marginLeft: 20,
-            borderRadius: 10
+            borderRadius: 10,
+            elevation: 4,
         },
         TextStyle: {
             color: '#fff'
@@ -27,7 +29,7 @@ export default props => {
 
     return (
         <View style={style.component}>
-            <Text style={style.TextStyle}>
+            <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16}}>
                 {props.gridName}
             </Text>
             <Text style={style.TextStyle}>

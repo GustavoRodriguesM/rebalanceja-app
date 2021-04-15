@@ -1,24 +1,25 @@
 import React, { Component } from 'react'
 import { Dimensions, FlatList, Text, View } from 'react-native'
-import { Button, Input } from 'react-native-elements';
 import defaultStyle from '../styles/defaultStyle';
 import { RebalancingService } from '../services/RebalancingService';
 import AquisitionSupportComponent from '../components/investment-components/AquisitionSupportComponent';
 import { getPrimaryColor } from '../styles/DefaultColors';
 import { AuthService } from '../services/AuthService';
-import { TextInput } from 'react-native-paper';
+import { ActivityIndicator, Button, Colors, TextInput } from 'react-native-paper';
+import { DefaultThemeColors } from '../styles/DefaultThemeColors';
 
 export default class InvestmentScreen extends Component {
 
     state = {
         aquisitionSupports: [],
-        financialSupport: 0
+        financialSupport: 0,
+        isLoading: false
     }
 
     constructor(props) {
         super(props);
         this.rebalancingService = new RebalancingService();
-
+        this.defaultThemeColors = new DefaultThemeColors();
         this.authService = new AuthService();
     }
 
@@ -33,8 +34,10 @@ export default class InvestmentScreen extends Component {
     }
 
 
-    teste = () => {
-        this.rebalancingService.rebalance(this, this.state.financialSupport);
+    rebalanceStocks = async () => {
+        this.setState({isLoading: true})
+        await this.rebalancingService.rebalance(this, this.state.financialSupport);
+        this.setState({isLoading: false})
     }
 
 
@@ -55,20 +58,27 @@ export default class InvestmentScreen extends Component {
     render() {
         return (
             <View style={defaultStyle.defaultBackgroundWithFlex}>
-                <Text style={{ marginLeft: Dimensions.get("screen").width * 0.05, marginTop: Dimensions.get("screen").width * 0.05, fontSize: 16, color: "#fff" }}>Rebalanceamento de ativos</Text>
+                <Text style={{ 
+                    marginLeft: Dimensions.get("screen").width * 0.05, 
+                    marginTop: Dimensions.get("screen").width * 0.05, 
+                    fontSize: 16, 
+                    color: this.defaultThemeColors.getDefaultTextColor()
+                }}>Rebalanceamento de ativos</Text>
                 <View style={{ margin: Dimensions.get("screen").width * 0.05 }}>
                     <TextInput
                         label="Aporte"
                         mode="outlined"
                         keyboardType='decimal-pad'
-                        style={{ backgroundColor: '#262626', marginBottom: 10 }}
-                        theme={{ colors: { text: '#fff', placeholder: '#fff', primary: '#fff' } }}
+                        style={{ backgroundColor: this.defaultThemeColors.getBackgroundTextInputColor(), marginBottom: 10 }}
+                        theme={{ colors: { text: this.defaultThemeColors.getDefaultTextColor(), placeholder: this.defaultThemeColors.getDefaultTextColor(), primary: this.defaultThemeColors.getDefaultTextColor() } }}
                         onChangeText={financialSupport => this.setState({ financialSupport })} />
-                    <Button
-                        title="Rebalancear"
-                        buttonStyle={{ backgroundColor: getPrimaryColor() }}
-                        onPress={this.teste}
-                    />
+                    <Button mode="contained" 
+                        loading={this.state.isLoading} 
+                        style={{backgroundColor: getPrimaryColor()}}
+                        onPress={this.rebalanceStocks}
+                        >
+                            Rebalancear
+                    </Button>
                 </View>
                 <View>
                     <FlatList

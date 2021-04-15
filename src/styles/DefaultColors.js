@@ -1,5 +1,5 @@
 
 
 export function getPrimaryColor() {
-    return "#FF8700"
+    return '#CF3341'//"#FF9F05"
 }

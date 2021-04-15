@@ -8,7 +8,8 @@ export default props => {
     const style = StyleSheet.create({
         component: {
             backgroundColor: '#2e2e2e',
-            marginTop: Dimensions.get("screen").width * 0.10,
+            marginBottom: Dimensions.get("screen").width * 0.05,
+            marginTop: Dimensions.get("screen").width * 0.05,
             marginLeft: Dimensions.get("screen").width * 0.05,
             marginRight: Dimensions.get("screen").width * 0.05,
             borderRadius: 10

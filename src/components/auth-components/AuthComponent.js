@@ -5,7 +5,7 @@ import { Button, Icon, Input } from 'react-native-elements'
 import { AuthService } from '../../services/AuthService'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getServerHost, UtilService } from '../../services/UtilService'
-import { TextInput, RadioButton } from 'react-native-paper'
+import { TextInput, RadioButton, HelperText } from 'react-native-paper'
 import { getPrimaryColor } from '../../styles/DefaultColors'
 
 class Auth extends Component {
@@ -19,6 +19,8 @@ class Auth extends Component {
             confirmPassword: '',
             stageNew: false,
             errorBadCredentials: false,
+            validate: false,
+            valid: false,
             remember: false
         };
 
@@ -36,33 +38,45 @@ class Auth extends Component {
 
     signIn = () => {
         let self = this;
+        this.state.validate = true;
+        this.state.valid = true;
 
-        try {
-            var bodyFormData = new FormData();
-            bodyFormData.append('grant_type', 'password');
-            bodyFormData.append('username', self.state.email);
-            bodyFormData.append('password', self.state.password);
-
-            axios({
-                method: "post",
-                url: this.utilSerice.getLoginUrl(),
-                data: bodyFormData,
-                headers: self.authService.getBasicAuthorization()
-            })
-                .then(function (response) {
-                    self.authService.saveToken(response);
-                    self.props.navigation.navigate('HomeScreen');
+        if(this.state.valid) {
+            try {
+                var bodyFormData = new FormData();
+                bodyFormData.append('grant_type', 'password');
+                bodyFormData.append('username', self.state.email);
+                bodyFormData.append('password', self.state.password);
+    
+                axios({
+                    method: "post",
+                    url: this.utilSerice.getLoginUrl(),
+                    data: bodyFormData,
+                    headers: self.authService.getBasicAuthorization()
                 })
-                .catch(function (response) {
-                    console.log(response);
-                    if (response.response.data.error_description === 'Bad credentials') {
-                        self.setState({ errorBadCredentials: true });
-                    }
-                });
-        } catch (e) {
-            console.log(e);
+                    .then(function (response) {
+                        self.authService.saveToken(response);
+                        self.props.navigation.navigate('HomeScreen');
+                    })
+                    .catch(function (response) {
+                        console.log(response);
+                        if (response.response.data.error_description === 'Bad credentials') {
+                            self.setState({ errorBadCredentials: true });
+                        }
+                    });
+            } catch (e) {
+                console.log(e);
+            }
         }
     };
+
+    hasErrors = () => {
+        if (this.state.validate) {
+            return !this.state.email.includes('@');
+        }
+
+        return false;
+    }
 
     signUp = () => {
         Alert.alert('Sucesso!', 'Criar a conta ')
@@ -88,6 +102,7 @@ class Auth extends Component {
                                 onChangeText={name => this.setState({ name })}
                             />
                         }
+
                         <TextInput
                             mode="outlined"
                             label="E-mail"
@@ -96,6 +111,10 @@ class Auth extends Component {
                             theme={{ colors: { text: '#fff', placeholder: '#fff', primary: '#fff' } }}
                             onChangeText={email => this.setState({ email })}
                         />
+                        <HelperText type="error" visible={this.hasErrors()}>
+                            Email address is invalid!
+                        </HelperText>
+
                         <TextInput
                             style={{ marginTop: Dimensions.get('screen').height * 0.02, marginBottom: Dimensions.get('screen').height * 0.03, backgroundColor: '#262626' }}
                             mode="outlined"

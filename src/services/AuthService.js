@@ -20,6 +20,10 @@ export class AuthService {
         await AsyncStorage.removeItem(this.REFRESH_TOKEN);
     }
 
+    async logout() {
+        await this.removeToken();
+    }
+
     async getAccessToken() {
         return await AsyncStorage.getItem(this.ACCESS_TOKEN);
     }
