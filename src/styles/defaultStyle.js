@@ -10,5 +10,9 @@ export default StyleSheet.create({
     },
     defaultBackground: {
         backgroundColor: '#161616',
+    },
+    defaultBackgroundWithFlex: {
+        backgroundColor: '#161616',
+        flex: 1
     }
 });

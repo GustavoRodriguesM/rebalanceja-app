@@ -5,28 +5,41 @@ import GeneralInvestComponent from '../components/home-components/GeneralInvestC
 import StockGridComponent from '../components/home-components/StockGridComponent'
 import StockListComponent from '../components/home-components/StockListComponent'
 import WelcomeComponent from '../components/home-components/WelcomeComponent'
-import { getGeneralData } from '../services/GeneralDataService'
+import { GeneralDataService } from '../services/GeneralDataService'
 import DefaultStyle from '../styles/defaultStyle'
 import {NavigationEvents} from 'react-navigation';
+import { AuthService } from '../services/AuthService'
 
 export default class HomeScreen extends Component {
     
     state = {
-        user: []
+        user: [],
+        name: []
     }
 
     constructor(props) {
         super(props);
+        this.generalDataService = new GeneralDataService();
+
+        this.authService = new AuthService();
+        this.teste();
     }
 
-    componentDidMount() {
-        this.props.navigation.addListener('focus', () => {
+    async componentDidMount() {
+        this.props.navigation.addListener('focus', async () => {
+            let hasTokenValid = await this.authService.hasTokenValid();
+
+            if (!hasTokenValid ) {
+                await this.authService.loginViaRefreshToken();
+            }
             this.teste();
         });
+
     }
 
-    teste = () => {
-        getGeneralData(this);
+    teste = async () => {
+        this.generalDataService.getGeneralData(this);
+        this.state.name = await this.authService.getName();
     }
 
     getGrid = () => {
@@ -51,7 +64,7 @@ export default class HomeScreen extends Component {
     render() {
         return (
             <View style={DefaultStyle.defaultBackground}>
-                <WelcomeComponent name="Gustavo" />
+                <WelcomeComponent name={this.state.name} />
                 <GeneralInvestComponent
                     bgColor='#52BB9C'
                     totalInvestments={this.state.user.sumAllStocks}

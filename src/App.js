@@ -18,11 +18,11 @@ export default function App() {
       <SafeAreaView style={DefaultStyle.containerWithFlex}>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="Auth"
+            initialRouteName="AuthScreen"
             screenOptions={{
               headerShown: false
             }}>
-            <Stack.Screen name="Auth" component={Auth} />
+            <Stack.Screen name="AuthScreen" component={Auth} />
             <Stack.Screen name="HomeScreen" component={Tabs} />
           </Stack.Navigator>
         </NavigationContainer>

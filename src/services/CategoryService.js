@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { AuthService } from "./AuthService";
 import { UtilService } from "./UtilService";
@@ -10,7 +9,7 @@ export class GeneralDataService {
         this.authService = new AuthService();
     }
 
-    async getGeneralData(state) {
+    async getAllCategories(state) {
         let accessToken = await this.authService.getAccessToken();
         await axios({
             method: 'get',

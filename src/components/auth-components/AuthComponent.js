@@ -1,25 +1,35 @@
 import axios from 'axios'
 import React, { Component, createContext, useContext } from 'react'
-import { SafeAreaView, StyleSheet, Text, View, Alert } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View, Alert, Dimensions } from 'react-native'
 import { Button, Icon, Input } from 'react-native-elements'
-import { TextInput } from 'react-native-gesture-handler'
-import { hasTokenValid } from '../../services/AuthService'
+import { AuthService } from '../../services/AuthService'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getServerHost, UtilService } from '../../services/UtilService'
+import { TextInput, RadioButton } from 'react-native-paper'
+import { getPrimaryColor } from '../../styles/DefaultColors'
 
 class Auth extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            email: 'gustavorodriguesm@hotmail.com',
-            password: '12345678',
+            email: '',
+            password: '',
             name: '',
             confirmPassword: '',
             stageNew: false,
-            errorBadCredentials: false
+            errorBadCredentials: false,
+            remember: false
         };
 
-        if(hasTokenValid()) {
+        this.authService = new AuthService();
+        this.utilSerice = new UtilService();
+
+    }
+
+    async componentDidMount() {
+        let hasTokenValid = await new AuthService().hasTokenValid();
+        if (hasTokenValid) {
             this.props.navigation.navigate('HomeScreen');
         }
     }
@@ -35,14 +45,12 @@ class Auth extends Component {
 
             axios({
                 method: "post",
-                url: "http://192.168.1.67:9000/oauth/token",
+                url: this.utilSerice.getLoginUrl(),
                 data: bodyFormData,
-                headers: { "Authorization": "Basic d2ViOjEyMw==" },
+                headers: self.authService.getBasicAuthorization()
             })
                 .then(function (response) {
-
-                    axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
-                    AsyncStorage.setItem('access_token', response.data.access_token);
+                    self.authService.saveToken(response);
                     self.props.navigation.navigate('HomeScreen');
                 })
                 .catch(function (response) {
@@ -64,54 +72,85 @@ class Auth extends Component {
         return (
             <View style={styles.loginStyle}>
                 <View style={styles.formContainer}>
-                    {this.state.errorBadCredentials &&
-                        <Text>Usuario/senha invalidos!</Text>
-                    }
-                    {this.state.stageNew &&
-                        <Input
-                            label="Nome"
-                            placeholder="João da Silva"
-                            leftIcon={{ type: 'font-awesome', name: 'user' }}
-                            style={styles.input}
-                            onChangeText={name => this.setState({ name })} />
-                    }
-                    <Input
-                        label="E-mail"
-                        placeholder='email@email.com'
-                        leftIcon={{ type: 'font-awesome', name: 'envelope-square' }}
-                        onChangeText={email => this.setState({ email })}
-                    />
-                    <Input
-                        label='Senha'
-                        leftIcon={{ type: 'font-awesome', name: 'lock' }}
-                        onChangeText={password => this.setState({ password })}
-                        secureTextEntry={true}
-                    />
-                    {this.state.stageNew &&
-                        <Input
-                            label='Confirme a senha'
-                            leftIcon={{ type: 'font-awesome', name: 'lock' }}
-                            onChangeText={confirmPassword => this.setState({ confirmPassword })}
+                    <View style={{ alignItems: 'center', marginBottom: Dimensions.get('screen').height * 0.06 }}>
+                        <Text style={{ color: '#fff', fontSize: 24, fontWeight: 'bold' }}>Bem vindo</Text>
+                    </View>
+                    <View>
+                        {this.state.errorBadCredentials &&
+                            <Text style={{ color: '#fff', alignItems: 'center', }}>Usuario/senha inválidos!</Text>
+                        }
+                        {this.state.stageNew &&
+                            <TextInput
+                                mode="outlined"
+                                label="Nome"
+                                style={{ marginTop: Dimensions.get('screen').height * 0.02, marginBottom: Dimensions.get('screen').height * 0.03, backgroundColor: '#262626' }}
+                                theme={{ colors: { text: '#fff', placeholder: '#fff', primary: '#fff' } }}
+                                onChangeText={name => this.setState({ name })}
+                            />
+                        }
+                        <TextInput
+                            mode="outlined"
+                            label="E-mail"
+                            keyboardType='email-address'
+                            style={{ backgroundColor: '#262626' }}
+                            theme={{ colors: { text: '#fff', placeholder: '#fff', primary: '#fff' } }}
+                            onChangeText={email => this.setState({ email })}
+                        />
+                        <TextInput
+                            style={{ marginTop: Dimensions.get('screen').height * 0.02, marginBottom: Dimensions.get('screen').height * 0.03, backgroundColor: '#262626' }}
+                            mode="outlined"
+                            label="Senha"
+                            theme={{ colors: { text: '#fff', placeholder: '#fff', primary: '#fff', }, }}
+                            onChangeText={password => this.setState({ password })}
                             secureTextEntry={true}
-                        />}
+                        />
+                        {this.state.stageNew &&
+                            <TextInput
+                                style={{ marginBottom: Dimensions.get('screen').height * 0.03, backgroundColor: '#262626' }}
+                                mode="outlined"
+                                label="Confirme a senha"
+                                theme={{ colors: { text: '#fff', placeholder: '#fff', primary: '#fff', }, }}
+                                onChangeText={confirmPassword => this.setState({ confirmPassword })}
+                                secureTextEntry={true}
+                            />
+                        }
+                    </View>
+
+                    {!this.state.stageNew &&
+                        <View style={styles.containerForgotPassword}>
+                            <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+                                <RadioButton
+                                    theme={{ colors: { text: '#fff' } }}
+                                    color="#fff"
+                                    onPress={() => this.setState({ remember: !this.state.remember })}
+                                    status={this.state.remember ? 'checked' : 'unchecked'}
+                                />
+                                <Text style={{ color: '#fff' }}>Lembrar-me</Text>
+                            </View>
+                            <Text style={{ color: '#fff' }}>Esqueci minha senha</Text>
+                        </View>
+                    }
 
                     {this.state.stageNew &&
                         <Button
                             onPress={this.signUp}
+                            buttonStyle={{ backgroundColor: getPrimaryColor(), borderRadius: 15 }}
                             title="Registrar!"
                         />}
                     {!this.state.stageNew &&
                         <Button
                             title="Entrar"
+                            buttonStyle={{ backgroundColor: getPrimaryColor(), borderRadius: 15 }}
                             onPress={this.signIn}
                         />}
-                    <View style={styles.labelAux}>
+
+                    <View style={styles.containerDontHaveAccount}>
                         {!this.state.stageNew &&
-                            <Text onPress={
+                            <Text style={{ color: '#fff' }} onPress={
                                 () => this.setState({ stageNew: true, errorBadCredentials: false })
-                            }>Ainda não tem uma conta? Se registre!</Text>}
+                            }>Ainda não tem uma conta? Crie uma!</Text>}
                         {this.state.stageNew &&
-                            <Text onPress={
+                            <Text style={{ color: '#fff' }} onPress={
                                 () => this.setState({ stageNew: false, errorBadCredentials: false })
                             }>Já está registrado? </Text>}
                     </View>
@@ -135,13 +174,18 @@ const styles = StyleSheet.create({
         color: '#fff'
     },
     formContainer: {
-        backgroundColor: '#fff',
         padding: 20,
         width: '90%'
     },
-    labelAux: {
+    containerForgotPassword: {
+        flexDirection: 'row',
+        alignItems: 'baseline',
+        justifyContent: 'space-between',
+        marginBottom: Dimensions.get('screen').height * 0.02
+    },
+    containerDontHaveAccount: {
         alignItems: 'center',
-        marginTop: 10
+        marginTop: Dimensions.get('screen').height * 0.02
     }
 })
 

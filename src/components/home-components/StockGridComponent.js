@@ -5,7 +5,8 @@ import BRLCurrencyFormat from '../../utils/BRLCurrencyFormat'
 export default props => {
     const style = StyleSheet.create({
         component: {
-            borderColor: props.bgColor,
+            borderColor: '#5b5555',//props.bgColor,
+            backgroundColor: '#5b5555',//'#161616',
             borderWidth: 1,
             marginTop: Dimensions.get("screen").width * 0.05,
             width: Dimensions.get("screen").width * 0.5,

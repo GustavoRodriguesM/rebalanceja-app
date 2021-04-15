@@ -6,6 +6,7 @@ import HomeScreen from '../screens/HomeScreen'
 import InvestmentScreen from '../screens/InvestmentScreen'
 import StockScreen from '../screens/StockScreen'
 import ProfileScreen from '../screens/ProfileScreen'
+import { getPrimaryColor } from '../styles/DefaultColors'
 
 const BottomTabs = createBottomTabNavigator();
 

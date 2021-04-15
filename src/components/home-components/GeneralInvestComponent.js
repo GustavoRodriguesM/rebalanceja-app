@@ -1,5 +1,6 @@
 import React from 'react'
 import { Dimensions, StyleSheet, Text, View }  from 'react-native'
+import { getPrimaryColor } from '../../styles/DefaultColors'
 import BRLCurrencyFormat from '../../utils/BRLCurrencyFormat'
 
 export default props => {
@@ -20,7 +21,7 @@ export default props => {
             alignItems: 'center',
         },
         TextStyle: {
-            color: '#fff' // ffc70e
+            color: getPrimaryColor() // ffc70e
         },
         totalInvestments: {
             fontSize: 24,
