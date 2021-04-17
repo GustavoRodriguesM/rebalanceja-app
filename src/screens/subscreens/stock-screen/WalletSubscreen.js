@@ -4,7 +4,6 @@ import { FlatList } from 'react-native-gesture-handler';
 import { List, withTheme } from 'react-native-paper';
 import { AuthService } from '../../../services/AuthService';
 import { WalletService } from '../../../services/WalletService';
-import { DefaultStyles } from '../../../styles/DefaultStyles';
 
 class WalletSubscreen extends Component {
 
@@ -13,7 +12,6 @@ class WalletSubscreen extends Component {
     this.state = {
       wallets: []
     }
-    this.defaultStyles = new DefaultStyles();
     this.authService = new AuthService();
     this.walletService = new WalletService();
   }
@@ -38,8 +36,8 @@ class WalletSubscreen extends Component {
     return (
       <List.Item
         key={index}
-        titleStyle={this.defaultStyles.getTextStyle()}
-        descriptionStyle={this.defaultStyles.getTextStyle()}
+        titleStyle={this.props.theme.styles.textStyle}
+        descriptionStyle={this.props.theme.styles.textStyle}
         title={this.state.wallets[index].description}
         description={this.state.wallets[index].totalStocks + " ativos"}
         left={props => <List.Icon {...props} icon="finance" color={this.props.theme.colors.primary} />}
@@ -58,7 +56,7 @@ class WalletSubscreen extends Component {
         flex: 1
       }}>
         <View style={{ alignItems: 'center', marginTop: Dimensions.get('screen').height * 0.05 }}>
-          <Text style={this.defaultStyles.getHeaderTextBoldStyle()}>Carteiras</Text>
+          <Text style={this.props.theme.styles.stocksScreen.headerTextBold}>Carteiras</Text>
         </View>
         <View>
           <FlatList

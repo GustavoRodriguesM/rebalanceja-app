@@ -3,7 +3,6 @@ import { Dimensions, Text, View } from 'react-native'
 import { RebalancingService } from '../../../services/RebalancingService';
 import { AquisitionService } from '../../../services/AquisitionService';
 import { AuthService } from '../../../services/AuthService';
-import defaultStyle from '../../../styles/defaultStyle';
 import BRLCurrencyFormat from '../../../utils/BRLCurrencyFormat';
 import { Button, Dialog, HelperText, Paragraph, Portal, TextInput, withTheme } from 'react-native-paper';
 
@@ -140,9 +139,13 @@ class FinancialSupportSubscreen extends Component {
 
     render() {
         return (
-            <View style={defaultStyle.defaultBackgroundWithFlex}>
+            <View style={this.props.theme.styles.defaultBackgroundWithFlex}>
                 <Portal>
-                    <Dialog visible={this.state.showModal} onDismiss={() => this.setState({ showModal: false })}>
+                    <Dialog 
+                        visible={this.state.showModal} 
+                        onDismiss={() => this.setState({ showModal: false })} 
+                        style={{backgroundColor: this.props.theme.colors.modalBackground}}
+                    >
                         <Dialog.Title>Confirmação</Dialog.Title>
                         <Dialog.Content>
                             <Paragraph>Tem certeza que deseja realizar a operação?</Paragraph>

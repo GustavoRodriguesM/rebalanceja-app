@@ -54,6 +54,7 @@ class ProfileScreen extends Component {
                     <ProfileItemComponent title="Alterar senha"/>
                 </ProfileGroupComponent>
                 <Button mode="contained"
+                        labelStyle={{color: this.props.theme.colors.text}}
                     style={{ backgroundColor: this.props.theme.colors.primary }}
                     onPress={() => this.logout()}>
                     Sair

@@ -3,7 +3,6 @@ import { Dimensions, FlatList, Text, View } from 'react-native'
 import { Button, TextInput, withTheme } from 'react-native-paper';
 import { RebalancingService } from '../../../services/RebalancingService';
 import { AuthService } from '../../../services/AuthService';
-import defaultStyle from '../../../styles/defaultStyle';
 import AquisitionSupportComponent from '../../../components/investment-components/AquisitionSupportComponent';
 
 class RebalancingSubscreen extends Component {
@@ -74,7 +73,7 @@ class RebalancingSubscreen extends Component {
 
     render() {
         return (
-            <View style={defaultStyle.defaultBackgroundWithFlex}>
+            <View style={this.props.theme.styles.defaultBackgroundWithFlex}>
                 <Text style={{
                     marginLeft: Dimensions.get("screen").width * 0.05,
                     marginTop: Dimensions.get("screen").width * 0.05,
@@ -92,6 +91,7 @@ class RebalancingSubscreen extends Component {
                         onChangeText={financialSupport => this.setState({ financialSupport })} />
                     <Button mode="contained"
                         loading={this.state.isLoading}
+                        labelStyle={{color: this.props.theme.colors.text}}
                         style={{ backgroundColor: this.props.theme.colors.primary }}
                         onPress={this.rebalanceStocks}
                     >
