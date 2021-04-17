@@ -29,7 +29,9 @@ export default class RebalancingSubscreen extends Component {
             if (!hasTokenValid) {
                 await this.authService.loginViaRefreshToken();
             }
-            await this.rebalanceStocks();
+            if(this.state.financialSupport > 0) {
+                await this.rebalanceStocks();
+            }
         });
     }
 
@@ -41,8 +43,6 @@ export default class RebalancingSubscreen extends Component {
     }
 
     onRegister = async (buyValue, isBuyOperation) => {
-        console.log(buyValue);
-        console.log(isBuyOperation);
         if(isBuyOperation) {
             if(Number(this.state.financialSupport) - buyValue <= 0)
                 this.setState({financialSupport: "0"});
