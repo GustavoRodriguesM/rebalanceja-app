@@ -4,6 +4,10 @@ export class UtilService {
         return "http://192.168.1.67:9000";
     }
 
+    getUpdateQuantityUrl = () => {
+        return this.getServerHost().concat("/aquisition/quantity")
+    }
+
     getAllWallets = () => {
         return this.getServerHost().concat("/wallets/user")
     }

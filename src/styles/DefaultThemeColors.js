@@ -31,4 +31,12 @@ export class DefaultThemeColors {
     getTabMenuInactiveColor = () => {
         return "#5b5555"
     }
+
+    getDisabledButtonColor = () => {
+        return "#5b5555"
+    }
+
+    getFinancialSupportSubScreenBackgroundColor = () => {
+        return "#5b5555"
+    }
 }

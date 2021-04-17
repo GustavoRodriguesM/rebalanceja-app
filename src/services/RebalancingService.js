@@ -22,6 +22,7 @@ export class RebalancingService {
         }).catch((response) => {
             //console.log(response.response)
             console.log("Erro rebalance()");
+            state.setState({aquisitionSupports: []})
         });
     }
 

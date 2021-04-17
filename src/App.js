@@ -6,13 +6,12 @@ import Tabs from './navigation/Tabs';
 import { Provider as PaperProvider } from 'react-native-paper';
 import DefaultStyle from './styles/defaultStyle'
 import Auth from './components/auth-components/AuthComponent';
-import HomeScreen from './screens/HomeScreen';
-
+import { LogBox } from 'react-native';
 
 const Stack = createStackNavigator();
 
-
 export default function App() {
+  LogBox.ignoreAllLogs();
   return (
     <PaperProvider>
       <SafeAreaView style={DefaultStyle.containerWithFlex}>
