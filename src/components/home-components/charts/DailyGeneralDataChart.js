@@ -1,14 +1,12 @@
 import React, { Component } from "react";
 import { Dimensions } from "react-native";
 import { LineChart } from "react-native-chart-kit";
-import { DefaultThemeColors } from "../../../styles/DefaultThemeColors";
+import { withTheme } from "react-native-paper";
 
-
-export default class DailyGeneralDataChart extends Component {
+class DailyGeneralDataChart extends Component {
 
     constructor(props) {
         super(props);
-        this.defaultThemeColors = new DefaultThemeColors();
     }
 
     render() {
@@ -35,11 +33,11 @@ export default class DailyGeneralDataChart extends Component {
                 width={Dimensions.get('screen').width * 0.9}
                 height={220}
                 chartConfig={{
-                    backgroundGradientFrom: this.defaultThemeColors.getChartBackgroundGrandientFrom(),
-                    backgroundGradientTo: this.defaultThemeColors.getChartBackgroundGrandientTo(),
+                    backgroundGradientFrom: this.props.theme.colors.homeScreenChart.backgroundGradientFrom,
+                    backgroundGradientTo: this.props.theme.colors.homeScreenChart.backgroundGradientTo,
                     decimalPlaces: 2, // optional, defaults to 2dp
                     color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                    scrollableDotStrokeColor: this.defaultThemeColors.getPrimaryColor(),
+                    scrollableDotStrokeColor: this.props.theme.colors.primary,
                     labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                     style: {
                         borderRadius: 16
@@ -47,10 +45,12 @@ export default class DailyGeneralDataChart extends Component {
                     propsForDots: {
                         r: "6",
                         strokeWidth: "2",
-                        stroke: this.defaultThemeColors.getPrimaryColor()
+                        stroke: this.props.theme.colors.primary
                     }
                 }}
             />
         )
     }
 }
+
+export default withTheme(DailyGeneralDataChart);

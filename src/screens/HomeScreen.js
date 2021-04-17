@@ -1,20 +1,15 @@
-import axios from 'axios'
 import React, { Component } from 'react'
-import { Dimensions, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, Text, View } from 'react-native'
 import GeneralInvestComponent from '../components/home-components/GeneralInvestComponent'
 import StockGridComponent from '../components/home-components/StockGridComponent'
 import StockListComponent from '../components/home-components/StockListComponent'
 import WelcomeComponent from '../components/home-components/WelcomeComponent'
 import { GeneralDataService } from '../services/GeneralDataService'
-import DefaultStyle from '../styles/defaultStyle'
-import { NavigationEvents } from 'react-navigation';
 import { AuthService } from '../services/AuthService'
-import { LineChart } from 'react-native-chart-kit'
-import { getPrimaryColor } from '../styles/DefaultColors'
 import DailyGeneralDataChart from '../components/home-components/charts/DailyGeneralDataChart'
-import { DefaultThemeColors } from '../styles/DefaultThemeColors'
+import { withTheme } from 'react-native-paper'
 
-export default class HomeScreen extends Component {
+class HomeScreen extends Component {
 
     state = {
         user: [],
@@ -26,7 +21,6 @@ export default class HomeScreen extends Component {
     constructor(props) {
         super(props);
         this.generalDataService = new GeneralDataService();
-        this.defaultThemeColors = new DefaultThemeColors();
 
         this.authService = new AuthService();
         this.teste();
@@ -70,7 +64,7 @@ export default class HomeScreen extends Component {
 
     render() {
         return (
-            <View style={{ backgroundColor: this.defaultThemeColors.getBackgroundViewColor(), flex: 1 }}>
+            <View style={{ backgroundColor: this.props.theme.colors.viewBackground, flex: 1 }}>
                 <WelcomeComponent name={this.state.name} />
                 <GeneralInvestComponent
                     totalInvestments={this.state.user.sumAllStocks}
@@ -81,7 +75,7 @@ export default class HomeScreen extends Component {
                 </StockListComponent>
 
                 <View style={{ marginTop: Dimensions.get('screen').height * 0.02 }}>
-                    <Text style={{ marginLeft: Dimensions.get('screen').width * 0.05, color: this.defaultThemeColors.getDefaultTextColor(), fontSize: 16 }}>Acompanhamento diário</Text>
+                    <Text style={{ marginLeft: Dimensions.get('screen').width * 0.05, color: this.props.theme.colors.text, fontSize: 16 }}>Acompanhamento diário</Text>
                     <View style={{ marginTop: Dimensions.get('screen').height * 0.01, alignItems: 'center' }}>
                         <DailyGeneralDataChart />
                     </View>
@@ -90,3 +84,5 @@ export default class HomeScreen extends Component {
         )
     }
 }
+
+export default withTheme(HomeScreen);

@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { Dimensions, Text, View } from 'react-native'
-import { DefaultThemeColors } from '../../styles/DefaultThemeColors';
-import { RebalancingService } from '../../services/RebalancingService';
-import { AquisitionService } from '../../services/AquisitionService';
-import { AuthService } from '../../services/AuthService';
-import defaultStyle from '../../styles/defaultStyle';
-import BRLCurrencyFormat from '../../utils/BRLCurrencyFormat';
-import { Button, Dialog, HelperText, Paragraph, Portal, TextInput } from 'react-native-paper';
+import { RebalancingService } from '../../../services/RebalancingService';
+import { AquisitionService } from '../../../services/AquisitionService';
+import { AuthService } from '../../../services/AuthService';
+import defaultStyle from '../../../styles/defaultStyle';
+import BRLCurrencyFormat from '../../../utils/BRLCurrencyFormat';
+import { Button, Dialog, HelperText, Paragraph, Portal, TextInput, withTheme } from 'react-native-paper';
 
-export default class FinancialSupportSubscreen extends Component {
+
+class FinancialSupportSubscreen extends Component {
 
     state = {
         isBuyOperation: true,
@@ -21,7 +21,6 @@ export default class FinancialSupportSubscreen extends Component {
     constructor(props) {
         super(props);
         this.rebalancingService = new RebalancingService();
-        this.defaultThemeColors = new DefaultThemeColors();
         this.aquisitionService = new AquisitionService();
         this.authService = new AuthService();
     }
@@ -64,18 +63,18 @@ export default class FinancialSupportSubscreen extends Component {
         if (button === "buy") {
             if (this.state.isBuyOperation) {
                 return {
-                    backgroundColor: this.defaultThemeColors.getPrimaryColor(), borderRadius: 100
+                    backgroundColor: this.props.theme.colors.primary, borderRadius: 100
                 }
             } else {
-                return { backgroundColor: this.defaultThemeColors.getDisabledButtonColor(), borderRadius: 100 }
+                return { backgroundColor: this.props.theme.colors.inactivated, borderRadius: 100 }
             }
         } else {
             if (!this.state.isBuyOperation) {
                 return {
-                    backgroundColor: this.defaultThemeColors.getPrimaryColor(), borderRadius: 100, marginLeft: Dimensions.get('screen').width * 0.05,
+                    backgroundColor: this.props.theme.colors.primary, borderRadius: 100, marginLeft: Dimensions.get('screen').width * 0.05,
                 }
             } else {
-                return { backgroundColor: this.defaultThemeColors.getDisabledButtonColor(), borderRadius: 100, marginLeft: Dimensions.get('screen').width * 0.05, }
+                return { backgroundColor: this.props.theme.colors.inactivated, borderRadius: 100, marginLeft: Dimensions.get('screen').width * 0.05, }
             }
         }
     }
@@ -155,7 +154,7 @@ export default class FinancialSupportSubscreen extends Component {
                                     color: '#fff'
                                 }}
                                 style={{
-                                    backgroundColor: this.defaultThemeColors.getDisabledButtonColor(), borderRadius: 100
+                                    backgroundColor: this.props.theme.colors.inactivated, borderRadius: 100
                                 }}
                             >Voltar</Button>
                             <Button
@@ -164,7 +163,7 @@ export default class FinancialSupportSubscreen extends Component {
                                     color: '#fff'
                                 }}
                                 style={{
-                                    backgroundColor: this.defaultThemeColors.getPrimaryColor(), borderRadius: 100, marginLeft: Dimensions.get('screen').width * 0.01
+                                    backgroundColor: this.props.theme.colors.primary, borderRadius: 100, marginLeft: Dimensions.get('screen').width * 0.01
                                 }}
                             >Confirmar</Button>
                         </Dialog.Actions>
@@ -172,7 +171,7 @@ export default class FinancialSupportSubscreen extends Component {
                 </Portal>
                 <View style={{ alignItems: 'center' }}>
                     <Text style={{
-                        color: this.defaultThemeColors.getDefaultTextColor(),
+                        color: this.props.theme.colors.text,
                         fontSize: 18,
                         fontWeight: 'bold',
                         marginTop: Dimensions.get('screen').height * 0.05
@@ -180,7 +179,7 @@ export default class FinancialSupportSubscreen extends Component {
                     <View style={{ marginTop: Dimensions.get('screen').height * 0.05 }}>
                         <View style={{ alignItems: 'center' }}>
                             <Text style={{
-                                color: this.defaultThemeColors.getDefaultTextColor(),
+                                color: this.props.theme.colors.text,
                                 fontSize: 18,
                                 fontWeight: 'bold'
                             }}>Atual</Text>
@@ -188,11 +187,11 @@ export default class FinancialSupportSubscreen extends Component {
                         <View style={{ flexDirection: 'row', }}>
 
                             <Text style={{
-                                color: this.defaultThemeColors.getDefaultTextColor(),
+                                color: this.props.theme.colors.text,
                                 fontSize: 24,
                             }}>{this.props.route.params.aquisition.aquisitionQuoteDTO.quantity} </Text>
                             <Text style={{
-                                color: this.defaultThemeColors.getPrimaryColor(),
+                                color: this.props.theme.colors.primary,
                                 fontSize: 24,
                                 fontWeight: 'bold'
                             }}>{this.props.route.params.aquisition.aquisitionQuoteDTO.stock.symbol}</Text>
@@ -200,12 +199,12 @@ export default class FinancialSupportSubscreen extends Component {
                     </View>
                     <View style={{ flexDirection: 'row', }}>
                         <Text style={{
-                            color: this.defaultThemeColors.getPrimaryColor(),
+                            color: this.props.theme.colors.primary,
                             fontSize: 20,
                             fontWeight: 'bold'
                         }}>R$ </Text>
                         <Text style={{
-                            color: this.defaultThemeColors.getDefaultTextColor(),
+                            color: this.props.theme.colors.text,
                             fontSize: 20,
                         }}>{BRLCurrencyFormat(this.props.route.params.aquisition.aquisitionQuoteDTO.total)} </Text>
 
@@ -231,7 +230,7 @@ export default class FinancialSupportSubscreen extends Component {
                     </View>
                 </View>
                 <View style={{
-                    backgroundColor: this.defaultThemeColors.getFinancialSupportSubScreenBackgroundColor(),
+                    backgroundColor: this.props.theme.colors.viewBackgroundSecundary,
                     marginTop: Dimensions.get('screen').height * 0.05,
                     flex: 1,
                     borderTopRightRadius: 50,
@@ -241,7 +240,7 @@ export default class FinancialSupportSubscreen extends Component {
                         <View style={{ alignItems: "center", }}>
                             <HelperText
                                 type="info"
-                                style={{ color: this.defaultThemeColors.getDefaultTextColor() }}
+                                style={{ color: this.props.theme.colors.text }}
                                 visible={this.state.isOperationInvalid}>
                                 Operação inválida! Valor máximo de venda: {this.props.route.params.aquisition.aquisitionQuoteDTO.quantity}
                             </HelperText>
@@ -253,8 +252,8 @@ export default class FinancialSupportSubscreen extends Component {
                                     mode="outlined"
                                     value={BRLCurrencyFormat(this.state.buyValue.toString())}
                                     keyboardType='numeric'
-                                    style={{ backgroundColor: this.defaultThemeColors.getBackgroundTextInputColor(), marginBottom: 10 }}
-                                    theme={{ colors: { text: this.defaultThemeColors.getDefaultTextColor(), placeholder: this.defaultThemeColors.getDefaultTextColor(), primary: this.defaultThemeColors.getDefaultTextColor() } }}
+                                    style={{ backgroundColor: this.props.theme.colors.textInputBackground, marginBottom: 10 }}
+                                    theme={{ colors: { text: this.props.theme.colors.text, placeholder: this.props.theme.colors.text, primary: this.props.theme.colors.text } }}
                                 />
 
                                 <TextInput
@@ -262,8 +261,8 @@ export default class FinancialSupportSubscreen extends Component {
                                     mode="outlined"
                                     value={this.state.buyQuantity}
                                     keyboardType='numeric'
-                                    style={{ backgroundColor: this.defaultThemeColors.getBackgroundTextInputColor(), marginBottom: 10 }}
-                                    theme={{ colors: { text: this.defaultThemeColors.getDefaultTextColor(), placeholder: this.defaultThemeColors.getDefaultTextColor(), primary: this.defaultThemeColors.getDefaultTextColor() } }}
+                                    style={{ backgroundColor: this.props.theme.colors.textInputBackground, marginBottom: 10 }}
+                                    theme={{ colors: { text: this.props.theme.colors.text, placeholder: this.props.theme.colors.text, primary: this.props.theme.colors.text } }}
                                     onChangeText={buyQuantity => this.onChangeBuyQuantity(buyQuantity)}
                                 />
                             </View>}
@@ -275,8 +274,8 @@ export default class FinancialSupportSubscreen extends Component {
                                     value={this.state.buyValue.toString()}
                                     keyboardType='numeric'
                                     onChangeText={buyValue => this.onChangeBuyValue(buyValue)}
-                                    style={{ backgroundColor: this.defaultThemeColors.getBackgroundTextInputColor(), marginBottom: 10 }}
-                                    theme={{ colors: { text: this.defaultThemeColors.getDefaultTextColor(), placeholder: this.defaultThemeColors.getDefaultTextColor(), primary: this.defaultThemeColors.getDefaultTextColor() } }}
+                                    style={{ backgroundColor: this.props.theme.colors.textInputBackground, marginBottom: 10 }}
+                                    theme={{ colors: { text: this.props.theme.colors.text, placeholder: this.props.theme.colors.text, primary: this.props.theme.colors.text } }}
                                 />
 
                                 <TextInput
@@ -284,8 +283,8 @@ export default class FinancialSupportSubscreen extends Component {
                                     mode="outlined"
                                     value={this.state.buyQuantity}
                                     keyboardType='numeric'
-                                    style={{ backgroundColor: this.defaultThemeColors.getBackgroundTextInputColor(), marginBottom: 10 }}
-                                    theme={{ colors: { text: this.defaultThemeColors.getDefaultTextColor(), placeholder: this.defaultThemeColors.getDefaultTextColor(), primary: this.defaultThemeColors.getDefaultTextColor() } }}
+                                    style={{ backgroundColor: this.props.theme.colors.textInputBackground, marginBottom: 10 }}
+                                    theme={{ colors: { text: this.props.theme.colors.text, placeholder: this.props.theme.colors.text, primary: this.props.theme.colors.text } }}
                                     onChangeText={buyQuantity => this.onChangeBuyQuantity(buyQuantity)}
                                     onBlur={() => { this.teste() }}
                                 />
@@ -297,7 +296,7 @@ export default class FinancialSupportSubscreen extends Component {
                         labelStyle={{ color: '#fff' }}
                         onPress={() => { this.showConfirmDialog() }}
                         style={{
-                            backgroundColor: this.defaultThemeColors.getPrimaryColor(), borderRadius: 100, margin: Dimensions.get('screen').width * 0.05,
+                            backgroundColor: this.props.theme.colors.primary, borderRadius: 100, margin: Dimensions.get('screen').width * 0.05,
                         }}>
                         Cadastrar
                         </Button>
@@ -306,3 +305,6 @@ export default class FinancialSupportSubscreen extends Component {
         )
     }
 }
+
+
+export default withTheme(FinancialSupportSubscreen);

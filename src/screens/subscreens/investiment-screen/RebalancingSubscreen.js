@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import { Dimensions, FlatList, Text, View } from 'react-native'
-import { Button, TextInput } from 'react-native-paper';
-import { DefaultThemeColors } from '../../styles/DefaultThemeColors';
-import { RebalancingService } from '../../services/RebalancingService';
-import { AuthService } from '../../services/AuthService';
-import defaultStyle from '../../styles/defaultStyle';
-import AquisitionSupportComponent from '../../components/investment-components/AquisitionSupportComponent';
+import { Button, TextInput, withTheme } from 'react-native-paper';
+import { RebalancingService } from '../../../services/RebalancingService';
+import { AuthService } from '../../../services/AuthService';
+import defaultStyle from '../../../styles/defaultStyle';
+import AquisitionSupportComponent from '../../../components/investment-components/AquisitionSupportComponent';
 
-export default class RebalancingSubscreen extends Component {
+class RebalancingSubscreen extends Component {
 
     state = {
         aquisitionSupports: [],
@@ -18,7 +17,6 @@ export default class RebalancingSubscreen extends Component {
     constructor(props) {
         super(props);
         this.rebalancingService = new RebalancingService();
-        this.defaultThemeColors = new DefaultThemeColors();
         this.authService = new AuthService();
     }
 
@@ -81,7 +79,7 @@ export default class RebalancingSubscreen extends Component {
                     marginLeft: Dimensions.get("screen").width * 0.05,
                     marginTop: Dimensions.get("screen").width * 0.05,
                     fontSize: 16,
-                    color: this.defaultThemeColors.getDefaultTextColor()
+                    color: this.props.theme.colors.text
                 }}>Rebalanceamento de ativos</Text>
                 <View style={{ margin: Dimensions.get("screen").width * 0.05 }}>
                     <TextInput
@@ -89,12 +87,12 @@ export default class RebalancingSubscreen extends Component {
                         mode="outlined"
                         keyboardType='decimal-pad'
                         value={this.state.financialSupport.toString()}
-                        style={{ backgroundColor: this.defaultThemeColors.getBackgroundTextInputColor(), marginBottom: 10 }}
-                        theme={{ colors: { text: this.defaultThemeColors.getDefaultTextColor(), placeholder: this.defaultThemeColors.getDefaultTextColor(), primary: this.defaultThemeColors.getDefaultTextColor() } }}
+                        style={{ backgroundColor: this.props.theme.colors.textInputBackground, marginBottom: 10 }}
+                        theme={{ colors: { text: this.props.theme.colors.text, placeholder: this.props.theme.colors.text, primary: this.props.theme.colors.text } }}
                         onChangeText={financialSupport => this.setState({ financialSupport })} />
                     <Button mode="contained"
                         loading={this.state.isLoading}
-                        style={{ backgroundColor: this.defaultThemeColors.getPrimaryColor() }}
+                        style={{ backgroundColor: this.props.theme.colors.primary }}
                         onPress={this.rebalanceStocks}
                     >
                         Rebalancear
@@ -113,3 +111,5 @@ export default class RebalancingSubscreen extends Component {
         )
     }
 }
+
+export default withTheme(RebalancingSubscreen);

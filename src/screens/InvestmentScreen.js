@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { AuthService } from '../services/AuthService';
-import { DefaultThemeColors } from '../styles/DefaultThemeColors';
-import RebalancingSubscreen from './subscreens/RebalancingSubscreen';
-import FinancialSupportSubscreen from './subscreens/FinancialSupportSubscreen';
 import { createStackNavigator } from '@react-navigation/stack';
+import { AuthService } from '../services/AuthService';
+import FinancialSupportSubscreen from './subscreens/investiment-screen/FinancialSupportSubscreen';
+import RebalancingSubscreen from './subscreens/investiment-screen/RebalancingSubscreen';
 
 const Stack = createStackNavigator();
 
@@ -11,7 +10,6 @@ export default class InvestmentScreen extends Component {
 
     constructor(props) {
         super(props);
-        this.defaultThemeColors = new DefaultThemeColors();
         this.authService = new AuthService();
     }
 

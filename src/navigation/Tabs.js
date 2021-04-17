@@ -1,20 +1,18 @@
 import React, { Component } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { Dimensions, SafeAreaView, Text } from 'react-native'
+import { Dimensions } from 'react-native'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
 import HomeScreen from '../screens/HomeScreen'
 import InvestmentScreen from '../screens/InvestmentScreen'
 import StockScreen from '../screens/StockScreen'
 import ProfileScreen from '../screens/ProfileScreen'
-import { getPrimaryColor } from '../styles/DefaultColors'
-import { DefaultThemeColors } from '../styles/DefaultThemeColors'
+import { withTheme } from 'react-native-paper'
 
 const BottomTabs = createBottomTabNavigator();
 
-export default class Tabs extends Component {
+class Tabs extends Component {
     constructor(props) {
         super(props);
-        this.defaultThemeColors = new DefaultThemeColors();
     }
 
     render() {
@@ -44,10 +42,10 @@ export default class Tabs extends Component {
                 })}
 
                 tabBarOptions={{
-                    activeBackgroundColor: this.defaultThemeColors.getTabMenuColor(),
-                    inactiveBackgroundColor: this.defaultThemeColors.getTabMenuColor(),
+                    activeBackgroundColor: this.props.theme.colors.tabsMenu.active,
+                    inactiveBackgroundColor: this.props.theme.colors.tabsMenu.inactive,
                     activeTintColor: '#fff',
-                    inactiveTintColor: this.defaultThemeColors.getTabMenuInactiveColor(),
+                    inactiveTintColor: this.props.theme.colors.tabsMenu.inactiveTintColor,
                     showLabel: true,
                     labelStyle: {
                         marginBottom: 5,
@@ -65,3 +63,5 @@ export default class Tabs extends Component {
         )
     }
 }
+
+export default withTheme(Tabs);

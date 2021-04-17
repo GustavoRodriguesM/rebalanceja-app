@@ -1,12 +1,11 @@
 import axios from 'axios'
-import React, { Component, createContext, useContext } from 'react'
-import { SafeAreaView, StyleSheet, Text, View, Alert, Dimensions } from 'react-native'
-import { Button, Icon, Input } from 'react-native-elements'
+import React, { Component } from 'react'
+import { StyleSheet, Text, View, Alert, Dimensions } from 'react-native'
+import { Button } from 'react-native-elements'
 import { AuthService } from '../../services/AuthService'
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getServerHost, UtilService } from '../../services/UtilService'
-import { TextInput, RadioButton, HelperText } from 'react-native-paper'
-import { getPrimaryColor } from '../../styles/DefaultColors'
+import { UtilService } from '../../services/UtilService'
+import { TextInput, RadioButton, HelperText, useTheme, withTheme } from 'react-native-paper'
+
 
 class Auth extends Component {
 
@@ -26,7 +25,6 @@ class Auth extends Component {
 
         this.authService = new AuthService();
         this.utilSerice = new UtilService();
-
     }
 
     async componentDidMount() {
@@ -153,13 +151,13 @@ class Auth extends Component {
                     {this.state.stageNew &&
                         <Button
                             onPress={this.signUp}
-                            buttonStyle={{ backgroundColor: getPrimaryColor(), borderRadius: 15 }}
+                            buttonStyle={{ backgroundColor: this.props.theme.colors.primary, borderRadius: 15 }}
                             title="Registrar!"
                         />}
                     {!this.state.stageNew &&
                         <Button
                             title="Entrar"
-                            buttonStyle={{ backgroundColor: getPrimaryColor(), borderRadius: 15 }}
+                            buttonStyle={{ backgroundColor: this.props.theme.colors.primary, borderRadius: 15 }}
                             onPress={this.signIn}
                         />}
 
@@ -208,4 +206,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Auth;
+export default withTheme(Auth);

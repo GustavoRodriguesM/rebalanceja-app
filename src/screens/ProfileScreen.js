@@ -1,16 +1,13 @@
 import React, { Component } from 'react'
 import { Dimensions, Text, View } from 'react-native'
-import defaultStyle from '../styles/defaultStyle';
 import { RebalancingService } from '../services/RebalancingService';
 import { AuthService } from '../services/AuthService';
 import { WalletService } from '../services/WalletService';
-import { FlatList } from 'react-native-gesture-handler';
-import { Button, List } from 'react-native-paper';
-import { getPrimaryColor } from '../styles/DefaultColors';
+import { Button, withTheme } from 'react-native-paper';
 import ProfileGroupComponent from '../components/profile-components/ProfileGroupComponent';
 import ProfileItemComponent from '../components/profile-components/ProfileItemComponent';
 
-export default class ProfileScreen extends Component {
+class ProfileScreen extends Component {
 
     constructor(props) {
         super(props);
@@ -57,7 +54,7 @@ export default class ProfileScreen extends Component {
                     <ProfileItemComponent title="Alterar senha"/>
                 </ProfileGroupComponent>
                 <Button mode="contained"
-                    style={{ backgroundColor: getPrimaryColor() }}
+                    style={{ backgroundColor: this.props.theme.colors.primary }}
                     onPress={() => this.logout()}>
                     Sair
                 </Button>
@@ -65,3 +62,5 @@ export default class ProfileScreen extends Component {
         )
     }
 }
+
+export default withTheme(ProfileScreen);

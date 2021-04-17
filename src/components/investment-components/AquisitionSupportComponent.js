@@ -1,8 +1,8 @@
 import React from 'react'
 import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import BRLCurrencyFormat from '../../utils/BRLCurrencyFormat'
-import { getPrimaryColor } from '../../styles/DefaultColors'
 import { Button } from 'react-native-elements'
+import { useTheme } from 'react-native-paper'
 
 export default props => {
     const style = StyleSheet.create({
@@ -89,7 +89,7 @@ export default props => {
                 <Button
                     title="Aportar"
                     style={{ width: '60%' }}
-                    buttonStyle={{ backgroundColor: getPrimaryColor() }}
+                    buttonStyle={{ backgroundColor: useTheme().colors.primary }}
                     onPress={props.onPressAquisitionSupport}
                 />
             </View>
