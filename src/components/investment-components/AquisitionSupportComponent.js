@@ -1,8 +1,7 @@
 import React from 'react'
 import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import BRLCurrencyFormat from '../../utils/BRLCurrencyFormat'
-import { Button } from 'react-native-elements'
-import { useTheme } from 'react-native-paper'
+import { Button, useTheme } from 'react-native-paper'
 
 export default props => {
     const style = StyleSheet.create({
@@ -87,11 +86,10 @@ export default props => {
             </View>
             <View style={{ alignItems: 'center', marginTop: Dimensions.get("screen").height * 0.01, marginBottom: Dimensions.get("screen").height * 0.01 }}>
                 <Button
-                    title="Aportar"
-                    style={{ width: '60%' }}
-                    buttonStyle={{ backgroundColor: useTheme().colors.primary }}
+                    labelStyle={{color: useTheme().colors.text}}
+                    style={{ backgroundColor: useTheme().colors.primary, width: '60%' }}
                     onPress={props.onPressAquisitionSupport}
-                />
+                >Aportar</Button>
             </View>
         </View>
     )

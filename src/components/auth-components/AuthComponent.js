@@ -1,10 +1,9 @@
 import axios from 'axios'
 import React, { Component } from 'react'
 import { StyleSheet, Text, View, Alert, Dimensions } from 'react-native'
-import { Button } from 'react-native-elements'
 import { AuthService } from '../../services/AuthService'
 import { UtilService } from '../../services/UtilService'
-import { TextInput, RadioButton, HelperText, useTheme, withTheme } from 'react-native-paper'
+import { TextInput, RadioButton, HelperText, withTheme, Button } from 'react-native-paper'
 
 
 class Auth extends Component {
@@ -39,13 +38,13 @@ class Auth extends Component {
         this.state.validate = true;
         this.state.valid = true;
 
-        if(this.state.valid) {
+        if (this.state.valid) {
             try {
                 var bodyFormData = new FormData();
                 bodyFormData.append('grant_type', 'password');
                 bodyFormData.append('username', self.state.email);
                 bodyFormData.append('password', self.state.password);
-    
+
                 axios({
                     method: "post",
                     url: this.utilSerice.getLoginUrl(),
@@ -151,15 +150,16 @@ class Auth extends Component {
                     {this.state.stageNew &&
                         <Button
                             onPress={this.signUp}
-                            buttonStyle={{ backgroundColor: this.props.theme.colors.primary, borderRadius: 15 }}
-                            title="Registrar!"
-                        />}
+                            labelStyle={{ color: this.props.theme.colors.text }}
+                            style={{ backgroundColor: this.props.theme.colors.primary, borderRadius: 15 }}
+                        >Cadastrar
+                        </Button>}
                     {!this.state.stageNew &&
                         <Button
-                            title="Entrar"
-                            buttonStyle={{ backgroundColor: this.props.theme.colors.primary, borderRadius: 15 }}
+                            labelStyle={{ color: this.props.theme.colors.text }}
+                            style={{ backgroundColor: this.props.theme.colors.primary, borderRadius: 15 }}
                             onPress={this.signIn}
-                        />}
+                        >Entrar</Button>}
 
                     <View style={styles.containerDontHaveAccount}>
                         {!this.state.stageNew &&
