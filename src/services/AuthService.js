@@ -13,6 +13,24 @@ export class AuthService {
         this.NAME = 'name';
     }
 
+    async register(state, userData) {
+        try {
+            await axios({
+                method: "post",
+                url: new UtilService().getRegisterUrl(),
+                data: userData
+            })
+                .then(function (response) {
+                    console.log("Teste");
+                })
+                .catch(function (response) {
+                    console.log(response.response);
+                });
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     async removeToken() {
         await AsyncStorage.removeItem(this.ACCESS_TOKEN);
         await AsyncStorage.removeItem(this.ACCESS_TOKEN_EXP);
@@ -60,7 +78,6 @@ export class AuthService {
         let self = this;
         let refreshToken = await this.getRefreshToken();
         let utilService = new UtilService();
-        //let accessTokenExp = await this.getAccessTokenExp();
         if (refreshToken) {
             try {
                 var bodyFormData = new FormData();

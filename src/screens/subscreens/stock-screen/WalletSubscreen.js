@@ -22,13 +22,13 @@ class WalletSubscreen extends Component {
         await this.authService.loginViaRefreshToken();
       }
 
-      this.teste();
+      this.getAllWallets();
     });
 
-    this.teste();
+    this.getAllWallets();
   }
 
-  teste = () => {
+  getAllWallets = () => {
     this.walletService.getAllWallets(this);
   }
 
@@ -43,7 +43,7 @@ class WalletSubscreen extends Component {
         left={props => <List.Icon {...props} icon="finance" color={this.props.theme.colors.primary} />}
         right={props => <List.Icon {...props} icon="chevron-right" color={this.props.theme.colors.primary} />}
         onPress={() => {
-          console.log("Teste");
+          this.props.navigation.navigate('WalletConfigSubscreen', this.state.wallets[index]);
         }}
       />
     )

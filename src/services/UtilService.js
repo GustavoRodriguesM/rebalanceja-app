@@ -4,6 +4,10 @@ export class UtilService {
         return "http://192.168.1.67:9000";
     }
 
+    getAvailableSubscriptionPlans = () => {
+        return this.getServerHost().concat("/subscription-plans/active")
+    }
+
     getUpdateQuantityUrl = () => {
         return this.getServerHost().concat("/aquisition/quantity")
     }
@@ -18,6 +22,10 @@ export class UtilService {
 
     getLoginUrl = () => {
         return this.getServerHost().concat("/oauth/token")
+    }
+
+    getRegisterUrl = () => {
+        return this.getServerHost().concat("/auth/register")
     }
 
     getGeneralDataUrl = () => {

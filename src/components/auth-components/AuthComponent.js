@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, Alert, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, Dimensions } from 'react-native'
 import { AuthService } from '../../services/AuthService'
 import { UtilService } from '../../services/UtilService'
 import { TextInput, RadioButton, HelperText, withTheme, Button } from 'react-native-paper'
@@ -67,16 +67,32 @@ class Auth extends Component {
         }
     };
 
-    hasErrors = () => {
+    validateEmail = () => {
         if (this.state.validate) {
             return !this.state.email.includes('@');
+        } else {
+            return false;
         }
-
-        return false;
     }
 
-    signUp = () => {
-        Alert.alert('Sucesso!', 'Criar a conta ')
+    validatePasswordConfirmation = () => {
+        if (this.state.validate) {
+            return !this.state.password === this.state.confirmPassword;
+        } else {
+            return false;
+        }
+    }
+
+    signUp = async () => {
+        this.state.validate = true;
+        let userRegister = {
+            email: this.state.email,
+            name: this.state.name,
+            password: this.state.password,
+            passwordConfirmation: this.state.confirmPassword
+        }
+        
+        await this.authService.register(this, userRegister);
     }
 
     render() {
@@ -108,9 +124,10 @@ class Auth extends Component {
                             theme={{ colors: { text: '#fff', placeholder: '#fff', primary: '#fff' } }}
                             onChangeText={email => this.setState({ email })}
                         />
-                        <HelperText type="error" visible={this.hasErrors()}>
+                        <HelperText style={{ color: '#fff' }} type="error" visible={this.validateEmail()}>
                             Email address is invalid!
                         </HelperText>
+
 
                         <TextInput
                             style={{ marginTop: Dimensions.get('screen').height * 0.02, marginBottom: Dimensions.get('screen').height * 0.03, backgroundColor: '#262626' }}
@@ -129,7 +146,12 @@ class Auth extends Component {
                                 onChangeText={confirmPassword => this.setState({ confirmPassword })}
                                 secureTextEntry={true}
                             />
+
                         }
+                        {this.state.stageNew &&
+                            <HelperText style={{ color: '#fff' }} type="error" visible={this.validatePasswordConfirmation()}>
+                                As senhas estão diferentes!
+                    </HelperText>}
                     </View>
 
                     {!this.state.stageNew &&
@@ -164,7 +186,7 @@ class Auth extends Component {
                     <View style={styles.containerDontHaveAccount}>
                         {!this.state.stageNew &&
                             <Text style={{ color: '#fff' }} onPress={
-                                () => this.setState({ stageNew: true, errorBadCredentials: false })
+                                () => this.props.navigation.navigate('SignUpScreen')
                             }>Ainda não tem uma conta? Crie uma!</Text>}
                         {this.state.stageNew &&
                             <Text style={{ color: '#fff' }} onPress={
