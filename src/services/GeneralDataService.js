@@ -17,9 +17,21 @@ export class GeneralDataService {
             url: this.utilService.getGeneralDataUrl(),
             headers: {Authorization: 'Bearer ' + accessToken }
         }).then((response) => {
-            state.setState({user: response.data})
+            switch(response.status) {
+                case 200:
+                    state.setState({user: response.data})
+                    break;
+                case 204:
+                    state.props.navigation.navigate('InitialParamsScreen');
+                    break;
+                default: 
+                    console.log("Status inesperado");
+                    break;
+            }
+
         }).catch((response) => {
             //console.log(response.response)
+            console.log(response);
             console.log("Falha ao chamar: getGeneralData()");
         });
     }

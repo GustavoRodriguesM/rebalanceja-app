@@ -1,25 +1,14 @@
-import React, { Component } from 'react'
-import { Text, View } from 'react-native';
-import { Button, withTheme } from 'react-native-paper'
+import React from 'react'
+import { SafeAreaView, Text, View }  from 'react-native'
+import { useTheme } from 'react-native-paper';
 
-class ProgressStep extends Component {
+export default props => {
 
-    constructor(props) {
-        super(props);
-
-    }
-
-
-    render() {
-        if(this.props.hide)
-            return null;
-        return (
-            <View>
-                {this.props.children}
-            </View>
-        )
-    }
-
+    if(props.hide)
+        return null;
+    return (
+        <View style={useTheme().styles.defaultBackgroundWithFlex}>
+            {props.children}
+        </View>
+    )
 }
-
-export default withTheme(ProgressStep);

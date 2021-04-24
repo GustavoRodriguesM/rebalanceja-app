@@ -4,6 +4,18 @@ export class UtilService {
         return "http://192.168.1.67:9000";
     }
 
+    getCreateAquisitionUrl = () => {
+        return this.getServerHost().concat("/aquisition");
+    }
+
+    getYahooFinanceUrl = (stockName) => {
+        return this.getServerHost().concat("/yahoo-finance/search/").concat(stockName);
+    }
+
+    getCreateFirstWalletUrl = () => {
+        return this.getServerHost().concat("/wallets/first")
+    }
+
     getAvailableSubscriptionPlans = () => {
         return this.getServerHost().concat("/subscription-plans/active")
     }
@@ -12,8 +24,12 @@ export class UtilService {
         return this.getServerHost().concat("/aquisition/quantity")
     }
 
+    
     getAllWallets = () => {
         return this.getServerHost().concat("/wallets/user")
+    }    
+    getActiveWallet = () => {
+        return this.getServerHost().concat("/wallets/user/active")
     }
 
     getCheckTokenUrl = (token) => {

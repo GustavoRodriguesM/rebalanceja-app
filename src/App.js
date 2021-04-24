@@ -8,6 +8,7 @@ import { LogBox } from 'react-native';
 import * as Font from 'expo-font';
 import Auth from './components/auth-components/AuthComponent'
 import SignUpScreen from './screens/SignUpScreen';
+import InitialParamsScreen from './screens/InitialParamsScreen';
 
 const Stack = createStackNavigator();
 
@@ -15,7 +16,7 @@ const FONTFAMILY = "Roboto"
 const PRIMARY = "#fed139"
 
 const customColors = {
-  primary: PRIMARY,//'#CF3341',//ed651b
+  primary: PRIMARY,//'#CF3341',//#ed651b
   viewBackground: '#161616',
   inactivated: '#5b5555',
   divider: '#5b5555',
@@ -50,6 +51,9 @@ const customStyles = {
   defaultBackgroundWithFlex:  {
     backgroundColor: customColors.viewBackground,
     flex: 1,
+  },
+  defaultBackground:  {
+    backgroundColor: customColors.viewBackground,
   },
   textStyle: {
     color: customColors.text,
@@ -101,6 +105,7 @@ export default class App extends Component {
               <Stack.Screen name="AuthScreen" component={Auth} /> 
               <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
               <Stack.Screen name="HomeScreen" component={Tabs} />
+              <Stack.Screen name="InitialParamsScreen" component={InitialParamsScreen} />
             </Stack.Navigator>
           </NavigationContainer>
         </SafeAreaView>
