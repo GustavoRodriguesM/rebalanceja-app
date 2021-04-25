@@ -1,7 +1,9 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react'
 import { Dimensions, Text, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler';
 import { List, withTheme } from 'react-native-paper';
+import { AsyncStorageService } from '../../../services/AsyncStorageService';
 import { AuthService } from '../../../services/AuthService';
 import { WalletService } from '../../../services/WalletService';
 
@@ -43,7 +45,9 @@ class WalletSubscreen extends Component {
         left={props => <List.Icon {...props} icon="finance" color={this.props.theme.colors.primary} />}
         right={props => <List.Icon {...props} icon="chevron-right" color={this.props.theme.colors.primary} />}
         onPress={() => {
-          this.props.navigation.navigate('WalletConfigSubscreen', this.state.wallets[index]);
+          new AsyncStorageService().setWalletToAlterConfig(this.state.wallets[index]);
+
+          this.props.navigation.navigate('WalletConfigNavigation', this.state.wallets[index]);
         }}
       />
     )

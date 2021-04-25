@@ -1,115 +1,129 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Dimensions, FlatList, Text, View } from 'react-native'
-import { Button, TextInput, withTheme } from 'react-native-paper';
+import { Button, TextInput, useTheme } from 'react-native-paper';
 import { RebalancingService } from '../../../services/RebalancingService';
 import { AuthService } from '../../../services/AuthService';
 import AquisitionSupportComponent from '../../../components/investment-components/AquisitionSupportComponent';
+import SnackBar from 'react-native-snackbar-component'
 
-class RebalancingSubscreen extends Component {
+export default props => {
 
-    state = {
-        aquisitionSupports: [],
-        financialSupport: 0,
-        isLoading: false
-    }
+    const [aquisitionsSupports, setAquisitionsSupports] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
+    const [financialSupport, setFinancialSupport] = useState("0")
+    const [showSnackbar, setShowSnackbar] = useState(false)
 
-    constructor(props) {
-        super(props);
-        this.rebalancingService = new RebalancingService();
-        this.authService = new AuthService();
-    }
-
-
-    async componentDidMount() {
-        this.props.navigation.addListener('focus', async () => {
-            let hasTokenValid = await this.authService.hasTokenValid();
-            if (!hasTokenValid) {
-                await this.authService.loginViaRefreshToken();
-            }
-            if(this.state.financialSupport > 0) {
-                await this.rebalanceStocks();
-            }
-        });
-    }
+    useEffect(() => {
+        async function fetchMyAPI() {
+            props.navigation.addListener('focus', async () => {
+                let hasTokenValid = await new AuthService().hasTokenValid();
+                if (!hasTokenValid) {
+                    await new AuthService().loginViaRefreshToken();
+                }
+                if (financialSupport > 0) {
+                    await rebalanceStocks();
+                }
+            });
 
 
-    rebalanceStocks = async () => {
-        this.setState({ isLoading: true })
-        await this.rebalancingService.rebalance(this, this.state.financialSupport);
-        this.setState({ isLoading: false })
-    }
-
-    onRegister = async (buyValue, isBuyOperation) => {
-        if(isBuyOperation) {
-            if(Number(this.state.financialSupport) - buyValue <= 0)
-                this.setState({financialSupport: "0"});
-            else
-                this.setState({financialSupport: (Number(this.state.financialSupport) - buyValue).toFixed(2)});
-        }else {
-            console.log("NewFinancialSupport: " + (Number(this.state.financialSupport) + Number(buyValue)));
-            this.setState({financialSupport: (Number(this.state.financialSupport) + Number(buyValue)).toFixed(2)});
         }
-        
+        fetchMyAPI()
+    }, []);
+
+    useEffect(() => {
+        async function dismissSnackbar() {
+            if(showSnackbar){
+                setTimeout(
+                    () => {
+                        setShowSnackbar(false)
+                    },
+                    3000)
+            }
+        }
+        dismissSnackbar()
+    }, [showSnackbar]);
+
+
+    const rebalanceStocks = async () => {
+        setIsLoading(true)
+        let responseList = await new RebalancingService().rebalance(financialSupport);
+        setAquisitionsSupports(responseList)
+
+        if (responseList === 'undefined' || responseList.length === 0) {
+            setShowSnackbar(true)
+        }
+        setIsLoading(false)
     }
 
-    renderItem = ({ index }) => {
+    const onRegister = async (buyValue, isBuyOperation) => {
+        if (isBuyOperation) {
+            if (Number(financialSupport) - buyValue <= 0)
+                setFinancialSupport("0");
+            else
+                setFinancialSupport((Number(financialSupport) - buyValue).toFixed(2));
+        } else {
+            setFinancialSupport((Number(financialSupport) + Number(buyValue)).toFixed(2));
+        }
+    }
+
+
+
+    const renderItemAquisition = ({ index }) => {
+        let selectedAquisition = aquisitionsSupports[index]
         return (
             <AquisitionSupportComponent
                 key={index}
-                gridName={this.state.aquisitionSupports[index].aquisitionQuoteDTO.stock.symbol}
-                categoryDescription={this.state.aquisitionSupports[index].aquisitionQuoteDTO.stock.category.description}
-                categoryColor={this.state.aquisitionSupports[index].aquisitionQuoteDTO.stock.category.defaultColor}
-                buyValue={this.state.aquisitionSupports[index].buyValue}
-                buyQuantity={this.state.aquisitionSupports[index].buyQuantity}
-                priceInBRL={this.state.aquisitionSupports[index].aquisitionQuoteDTO.stock.priceInBRL}
-                percentualDifference={this.state.aquisitionSupports[index].percentualDifferenceOriginal}
+                gridName={selectedAquisition.aquisitionQuoteDTO.stock.symbol}
+                categoryDescription={selectedAquisition.aquisitionQuoteDTO.stock.category.description}
+                categoryColor={selectedAquisition.aquisitionQuoteDTO.stock.category.defaultColor}
+                buyValue={selectedAquisition.buyValue}
+                buyQuantity={selectedAquisition.buyQuantity}
+                priceInBRL={selectedAquisition.aquisitionQuoteDTO.stock.priceInBRL}
+                percentualDifference={selectedAquisition.percentualDifferenceOriginal}
                 onPressAquisitionSupport={() => {
-                    this.props.navigation.navigate('FinancialSupportSubscreen', {aquisition: this.state.aquisitionSupports[index], onRegister: this.onRegister});
+                    props.navigation.navigate('FinancialSupportSubscreen', { aquisition: selectedAquisition, onRegister: onRegister });
                 }}
 
             />)
     }
 
-
-    render() {
-        return (
-            <View style={this.props.theme.styles.defaultBackgroundWithFlex}>
+    return (
+        <>
+            <SnackBar visible={showSnackbar} textMessage="Nenhum aporte necessário por enquanto!" actionHandler={() => { setShowSnackbar(false) }} actionText="Fechar" />
+            <View style={useTheme().styles.defaultBackgroundWithFlex}>
                 <Text style={{
                     marginLeft: Dimensions.get("screen").width * 0.05,
                     marginTop: Dimensions.get("screen").width * 0.05,
                     fontSize: 16,
-                    color: this.props.theme.colors.text
+                    color: useTheme().colors.text
                 }}>Rebalanceamento de ativos</Text>
                 <View style={{ margin: Dimensions.get("screen").width * 0.05 }}>
                     <TextInput
                         label="Aporte"
-                        mode="outlined"
+                        mode="flat"
                         keyboardType='decimal-pad'
-                        value={this.state.financialSupport.toString()}
-                        style={{ backgroundColor: this.props.theme.colors.textInputBackground, marginBottom: 10 }}
-                        theme={{ colors: { text: this.props.theme.colors.text, placeholder: this.props.theme.colors.text, primary: this.props.theme.colors.text } }}
-                        onChangeText={financialSupport => this.setState({ financialSupport })} />
+                        value={financialSupport.toString()}
+                        style={{ backgroundColor: useTheme().colors.textInputBackground, marginBottom: 10 }}
+                        theme={{ colors: { text: useTheme().colors.text, placeholder: useTheme().colors.text, primary: useTheme().colors.text } }}
+                        onChangeText={financialSupport => setFinancialSupport(financialSupport)} />
                     <Button mode="contained"
-                        loading={this.state.isLoading}
-                        labelStyle={{color: this.props.theme.colors.text}}
-                        style={{ backgroundColor: this.props.theme.colors.primary }}
-                        onPress={this.rebalanceStocks}
+                        loading={isLoading}
+                        style={{ backgroundColor: useTheme().colors.primary }}
+                        onPress={rebalanceStocks}
                     >
                         Rebalancear
-                    </Button>
+                </Button>
                 </View>
                 <View>
                     <FlatList
                         style={{ maxHeight: Dimensions.get("screen").height * 0.60 }}
-                        data={this.state.aquisitionSupports}
-                        renderItem={this.renderItem}
+                        data={aquisitionsSupports}
+                        renderItem={renderItemAquisition}
                         keyExtractor={(item, index) => index.toString()}
                         contentContainerStyle={{ padding: 10 }}
                     />
                 </View>
             </View>
-        )
-    }
+        </>
+    )
 }
-
-export default withTheme(RebalancingSubscreen);

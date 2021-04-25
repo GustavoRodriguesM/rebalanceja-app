@@ -48,11 +48,11 @@ const customStyles = {
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
-  defaultBackgroundWithFlex:  {
+  defaultBackgroundWithFlex: {
     backgroundColor: customColors.viewBackground,
     flex: 1,
   },
-  defaultBackground:  {
+  defaultBackground: {
     backgroundColor: customColors.viewBackground,
   },
   textStyle: {
@@ -62,7 +62,7 @@ const customStyles = {
   stocksScreen: {
     headerTextBold: {
       color: customColors.text,
-      fontSize: 24,  
+      fontSize: 24,
       fontFamily: FONTFAMILY.concat('-Bold')
     },
   }
@@ -101,8 +101,7 @@ export default class App extends Component {
               screenOptions={{
                 headerShown: false
               }}>
-              {/*<Stack.Screen name="AuthScreen" component={Auth} /> */}
-              <Stack.Screen name="AuthScreen" component={Auth} /> 
+              <Stack.Screen name="AuthScreen" component={Auth} />
               <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
               <Stack.Screen name="HomeScreen" component={Tabs} />
               <Stack.Screen name="InitialParamsScreen" component={InitialParamsScreen} />

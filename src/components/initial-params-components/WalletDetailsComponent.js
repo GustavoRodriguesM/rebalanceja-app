@@ -1,10 +1,7 @@
 import Slider from '@react-native-community/slider';
-import React, { Component, useCallback, useEffect, useState } from 'react';
-import { render } from 'react-dom';
-import { Dimensions, LogBox, ScrollView, View } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
-import { Appbar, withTheme, Subheading, Text, TextInput, Title, List, useTheme, Button } from 'react-native-paper';
-import { AuthService } from '../../services/AuthService';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, FlatList, ScrollView, View } from 'react-native';
+import { Appbar, Text, TextInput, Title, List, useTheme, Button } from 'react-native-paper';
 import { CategoryService } from '../../services/CategoryService';
 import { WalletService } from '../../services/WalletService';
 

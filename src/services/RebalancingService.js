@@ -11,19 +11,21 @@ export class RebalancingService {
         this.utilService = new UtilService();
     }
 
-    async rebalance(state, financialSupport) {
+    async rebalance(financialSupport) {
         let accessToken = await this.authService.getAccessToken();
+        let responseList = [];
         await axios({
             method: 'post',
             url: this.utilService.getFinancialSupportUrl(financialSupport),
             headers: {Authorization: 'Bearer ' + accessToken},
         }).then((response) => {
-            state.setState({aquisitionSupports: response.data})
+            responseList = response.data;
         }).catch((response) => {
             //console.log(response.response)
             console.log("Erro rebalance()");
-            state.setState({aquisitionSupports: []})
         });
+
+        return responseList;
     }
 
 }

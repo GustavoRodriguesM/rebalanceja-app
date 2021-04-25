@@ -1,32 +1,40 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AuthService } from '../services/AuthService';
-import { createStackNavigator } from '@react-navigation/stack';
-import WalletSubscreen from './subscreens/stock-screen/WalletSubscreen';
-import WalletConfigSubscreen from './subscreens/stock-screen/WalletConfigSubscreen';
-import { NavigationContainer } from '@react-navigation/native';
+import WalletConfigNavigation from './subscreens/stock-screen/WalletConfigNavigation';
+import { Appbar } from 'react-native-paper';
+import { WalletService } from '../services/WalletService';
 
-const Stack = createStackNavigator();
+export default props => {
 
-export default class InvestmentScreen extends Component {
+    const [description, setDescription] = useState("")
 
-    constructor(props) {
-        super(props);
-        this.authService = new AuthService();
-    }
-
-
-    async componentDidMount() {
-        this.props.navigation.addListener('focus', async () => {
-            let hasTokenValid = await this.authService.hasTokenValid();
+    useEffect(() => {
+        async function fetchMyAPI() {
+            let authService = new AuthService();
+            let hasTokenValid = await authService.hasTokenValid();
             if (!hasTokenValid) {
-                await this.authService.loginViaRefreshToken();
+                await authService.loginViaRefreshToken();
             }
-        });
-    }
+            
+            let walletLocal = await new WalletService().getActiveWallet();
+            setDescription(walletLocal.description)
+        }
 
-    render() {
-        return (
-            <NavigationContainer
+        fetchMyAPI()
+    }, []);
+
+    return (
+        <>
+            <Appbar.Header>
+                <Appbar.Content title={description} subtitle={"Alterando carteira"} style={{ alignItems: 'center' }} />
+            </Appbar.Header>
+            <WalletConfigNavigation />
+        </>
+    )
+}
+
+/*
+ <NavigationContainer
                 independent={true}>
                 <Stack.Navigator
                     initialRouteName="WalletSubscreen"
@@ -35,14 +43,22 @@ export default class InvestmentScreen extends Component {
                     }}>
                     <Stack.Screen
                         name="WalletSubscreen"
-                        component={WalletSubscreen} 
-                        options={{headerShown: false}}
-                        />
+                        component={WalletSubscreen}
+                        options={{ headerShown: false }}
+                    />
                     <Stack.Screen
-                        name="WalletConfigSubscreen"
-                        component={WalletConfigSubscreen} />
+                        name="WalletConfigNavigation"
+                        {...props}
+                        options={{
+                            header: ({ scene, previous, navigation }) => {
+                                return (
+                                    <Appbar.Header>
+                                        <Appbar.Content title={scene.route.params.description} subtitle={"Alterando carteira"} style={{ alignItems: 'center' }} />
+                                    </Appbar.Header>
+                                );
+                            }
+                        }}
+                        component={WalletConfigNavigation} />
                 </Stack.Navigator>
             </NavigationContainer>
-        )
-    }
-}
+*/

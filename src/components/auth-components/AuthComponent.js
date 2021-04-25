@@ -133,6 +133,7 @@ class Auth extends Component {
                             style={{ marginTop: Dimensions.get('screen').height * 0.02, marginBottom: Dimensions.get('screen').height * 0.03, backgroundColor: '#262626' }}
                             mode="outlined"
                             label="Senha"
+                            keyboardType='number-pad'
                             theme={{ colors: { text: '#fff', placeholder: '#fff', primary: '#fff', }, }}
                             onChangeText={password => this.setState({ password })}
                             secureTextEntry={true}
@@ -148,23 +149,10 @@ class Auth extends Component {
                             />
 
                         }
-                        {this.state.stageNew &&
-                            <HelperText style={{ color: '#fff' }} type="error" visible={this.validatePasswordConfirmation()}>
-                                As senhas estão diferentes!
-                    </HelperText>}
                     </View>
 
                     {!this.state.stageNew &&
                         <View style={styles.containerForgotPassword}>
-                            <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-                                <RadioButton
-                                    theme={{ colors: { text: '#fff' } }}
-                                    color="#fff"
-                                    onPress={() => this.setState({ remember: !this.state.remember })}
-                                    status={this.state.remember ? 'checked' : 'unchecked'}
-                                />
-                                <Text style={{ color: '#fff' }}>Lembrar-me</Text>
-                            </View>
                             <Text style={{ color: '#fff' }}>Esqueci minha senha</Text>
                         </View>
                     }

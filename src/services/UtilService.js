@@ -4,6 +4,10 @@ export class UtilService {
         return "http://192.168.1.67:9000";
     }
 
+    getAquisitionsByWallet= (idWallet) => {
+        return this.getServerHost().concat("/wallets/").concat(idWallet);
+    }
+
     getCreateAquisitionUrl = () => {
         return this.getServerHost().concat("/aquisition");
     }
@@ -16,6 +20,10 @@ export class UtilService {
         return this.getServerHost().concat("/wallets/first")
     }
 
+    getWalletPutUrl = (idWallet) => {
+        return this.getServerHost().concat("/wallets/").concat(idWallet)
+    }
+    
     getAvailableSubscriptionPlans = () => {
         return this.getServerHost().concat("/subscription-plans/active")
     }
