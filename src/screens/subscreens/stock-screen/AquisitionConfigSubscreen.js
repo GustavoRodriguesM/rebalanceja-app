@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { Dimensions, ScrollView, View } from 'react-native'
-import { Card, FAB, Paragraph,  useTheme } from 'react-native-paper'
-import { AsyncStorageService } from '../../../services/AsyncStorageService'
+import { Card, Divider, FAB, Paragraph, Portal, useTheme, Provider, Button, Appbar } from 'react-native-paper'
 import { WalletService } from '../../../services/WalletService'
 import BRLCurrencyFormat from './../../../utils/BRLCurrencyFormat'
 
 export default props => {
 
     const [aquisitions, setAquisitions] = useState([])
+
+    /* FAB */
+    const [state, setState] = useState({ open: false });
+
+    const onStateChange = ({ open }) => setState({ open });
+
+    const { open } = state;
+    /* FAB */
+
 
     useEffect(() => {
         async function fetchMyAPI() {
@@ -32,7 +40,7 @@ export default props => {
                     marginRight: Dimensions.get('screen').width * 0.1
                 }}
                     onLongPress={() => console.log("LongPress")}>
-                    <Card.Title title={obj.stock.symbol} titleStyle={{color: colorPrimary}} subtitle={obj.stock.category.description} />
+                    <Card.Title title={obj.stock.symbol} titleStyle={{ color: colorPrimary }} subtitle={obj.stock.category.description} />
                     <Card.Content>
                         <View
                             style={{
@@ -69,6 +77,11 @@ export default props => {
                             }}>
                             <Paragraph>Aportar</Paragraph>
                         </View>
+                        <Divider style={{
+                            backgroundColor: colorPrimary,
+                            marginTop: Dimensions.get('screen').height * 0.02,
+                            opacity: 0.3
+                        }} />
                     </Card.Content>
                 </Card>
             )
@@ -78,27 +91,27 @@ export default props => {
     }
 
     return (
-        <>
-            <ScrollView style={{ backgroundColor: useTheme().colors.viewBackground, flex: 1 }}>
+        <View style={{ backgroundColor: useTheme().colors.viewBackground }}>
+            <Appbar.Header>
+                <Appbar.Content title={description} subtitle={"Alterando carteira"} style={{ alignItems: 'center' }} />
+            </Appbar.Header>
+            <ScrollView>
+                <Paragraph>Adicione seus ativos aqui!</Paragraph>
+                <Paragraph>Qualquer ação é salva automaticamente</Paragraph>
+                <View style={{ alignItems: 'center' }}>
+                    <Button mode="contained"
+                        style={{
+                            backgroundColor: useTheme().colors.primary,
+                            width: '50%'
+                        }}
+                    >Adicionar</Button>
+                </View>
                 <View >
                     <View style={{ flexDirection: 'row', flex: 1, flexWrap: 'wrap' }}>
                         {getStockListCard()}
                     </View>
                 </View>
             </ScrollView>
-
-            <FAB
-                style={{
-                    position: 'absolute',
-                    margin: 16,
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: useTheme().colors.primary
-                }}
-                small={false}
-                icon="plus"
-                onPress={() => console.log("clicou")}
-            />
-        </>
+        </View>
     )
 }

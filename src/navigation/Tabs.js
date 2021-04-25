@@ -57,7 +57,7 @@ class Tabs extends Component {
                 }}>
                 <BottomTabs.Screen name="HomeScreen" component={HomeScreen} options={{ title: 'Início' }} />
                 <BottomTabs.Screen name="InvestmentScreen" component={InvestmentScreen} options={{ title: 'Investimentos' }} />
-                <BottomTabs.Screen name="StockScreen" component={StockScreen} options={{ title: 'Carteira' }} />
+                <BottomTabs.Screen name="StockScreen" component={StockScreen} options={{ title: 'Ativos' }} />
                 <BottomTabs.Screen name="ProfileScreen" component={ProfileScreen} options={{ title: 'Perfil' }} />
             </BottomTabs.Navigator>
         )

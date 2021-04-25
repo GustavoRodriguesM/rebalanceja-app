@@ -1,7 +1,8 @@
 import Slider from '@react-native-community/slider';
-import React, { useEffect, useState } from 'react';
-import { Dimensions, FlatList, ScrollView, View } from 'react-native';
-import { Appbar, Text, TextInput, Title, List, useTheme, Button, FAB, Snackbar } from 'react-native-paper';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import { Dimensions, Keyboard, ScrollView, View } from 'react-native';
+import { Text, TextInput, Title, List, useTheme, FAB } from 'react-native-paper';
 import { AsyncStorageService } from '../../../services/AsyncStorageService';
 import { CategoryService } from '../../../services/CategoryService';
 import { WalletService } from '../../../services/WalletService';
@@ -12,23 +13,33 @@ export default props => {
     const [idealPercents, setIdealPercents] = useState([])
     const [wallet, setWallet] = useState([])
 
+    useFocusEffect(
+        useCallback(() => {
+            fetchMyAPI()
+        }, [])
+    );
 
     useEffect(() => {
-        async function fetchMyAPI() {
-            let response = await new CategoryService().getAllCategories();
-            let walletLocal = await new WalletService().getActiveWallet();
-            setCategories(response)
-            categoriesIdealPercents(response, walletLocal);
-            setDescription(walletLocal.description)
-            setWallet(walletLocal)
-        }
+
         fetchMyAPI()
     }, []);
 
-    const categoriesIdealPercents = (categoriesList, oldWalletLocal) => {
+    const fetchMyAPI = async () => {
+        let response = await new CategoryService().getAllCategories();
+        let walletLocal = await new WalletService().getActiveWallet();
+        setCategories(response)
+        await categoriesIdealPercents(walletLocal);
+        setDescription(walletLocal.description)
+        setWallet(walletLocal)
+    }
+
+    const categoriesIdealPercents = async (oldWalletLocal) => {
+        let listIdealPercents = []
         oldWalletLocal.idealPercents.forEach(oldElement => {
-            idealPercents.push({ idCategory: oldElement.category.idCategory, idealPercent: oldElement.idealPercent });
+            listIdealPercents.push({ idCategory: oldElement.category.idCategory, idealPercent: oldElement.idealPercent });
         })
+
+        setIdealPercents(listIdealPercents)
     }
 
     const changeIdealPercentValue = (value, index) => {
@@ -67,6 +78,7 @@ export default props => {
             }
             await new WalletService().updateWallet(wallet.idWallet, dataObj);
             await new AsyncStorageService().removeWalletToAlterConfig();
+            Keyboard.dismiss()
             props.navigation.navigate('HomeScreen')
         }
     }

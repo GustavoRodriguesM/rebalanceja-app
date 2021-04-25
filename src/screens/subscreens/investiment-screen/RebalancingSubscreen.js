@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Dimensions, FlatList, Text, View } from 'react-native'
+import { Dimensions, FlatList, Keyboard, Text, View } from 'react-native'
 import { Button, TextInput, useTheme } from 'react-native-paper';
 import { RebalancingService } from '../../../services/RebalancingService';
 import { AuthService } from '../../../services/AuthService';
@@ -46,6 +46,7 @@ export default props => {
 
     const rebalanceStocks = async () => {
         setIsLoading(true)
+        Keyboard.dismiss()
         let responseList = await new RebalancingService().rebalance(financialSupport);
         setAquisitionsSupports(responseList)
 
