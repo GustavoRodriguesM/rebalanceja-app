@@ -1,8 +1,8 @@
 import { Platform, StatusBar } from "react-native";
 import { DefaultTheme } from "react-native-paper";
 
-const FONTFAMILY = "Roboto"
-const PRIMARY = "#fed139"
+const FONTFAMILY = "Inter"
+const PRIMARY = '#ffd342'//"#fed139"
 
 const customColors = {
   primary: PRIMARY,//'#CF3341',//#ed651b
@@ -12,8 +12,10 @@ const customColors = {
   viewBackgroundSecundary: '#5b5555',
   viewCardBackground: '#262626',
   text: '#fff',
+  error: '#CF3341',
   textInputBackground: '#262626',
   modalBackground: '#262626',
+  surface: '#161616',
   button: {
     background: PRIMARY,
     text: "#000"

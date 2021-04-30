@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Dimensions, Text, View } from 'react-native'
+import { Dimensions, ScrollView, Text, View } from 'react-native'
 import GeneralInvestComponent from '../components/home-components/GeneralInvestComponent'
 import StockGridComponent from '../components/home-components/StockGridComponent'
 import StockListComponent from '../components/home-components/StockListComponent'
@@ -65,21 +65,24 @@ class HomeScreen extends Component {
     render() {
         return (
             <View style={{ backgroundColor: this.props.theme.colors.viewBackground, flex: 1 }}>
-                <WelcomeComponent name={this.state.name} />
-                <GeneralInvestComponent
-                    totalInvestments={this.state.user.sumAllStocks}
-                />
+                <ScrollView>
 
-                <StockListComponent >
-                    {this.getGrid()}
-                </StockListComponent>
+                    <WelcomeComponent name={this.state.name} />
+                    <GeneralInvestComponent
+                        totalInvestments={this.state.user.sumAllStocks}
+                    />
 
-                <View style={{ marginTop: Dimensions.get('screen').height * 0.02 }}>
-                    <Text style={{ marginLeft: Dimensions.get('screen').width * 0.05, color: this.props.theme.colors.text, fontSize: 16 }}>Acompanhamento diário</Text>
-                    <View style={{ marginTop: Dimensions.get('screen').height * 0.01, alignItems: 'center' }}>
-                        <DailyGeneralDataChart />
+                    <StockListComponent >
+                        {this.getGrid()}
+                    </StockListComponent>
+
+                    <View style={{ marginTop: Dimensions.get('screen').height * 0.02 }}>
+                        <Text style={{ marginLeft: Dimensions.get('screen').width * 0.05, color: this.props.theme.colors.text, fontSize: 16 }}>Acompanhamento diário</Text>
+                        <View style={{ marginTop: Dimensions.get('screen').height * 0.01, alignItems: 'center' }}>
+                            <DailyGeneralDataChart />
+                        </View>
                     </View>
-                </View>
+                </ScrollView>
             </View>
         )
     }

@@ -11,6 +11,8 @@ import SignUpScreen from './screens/SignUpScreen';
 import InitialParamsScreen from './screens/InitialParamsScreen';
 import RebalanceJaTheme from './utils/rebalanceJaTheme'
 
+
+
 const Stack = createStackNavigator();
 
 export default class App extends Component {
@@ -20,14 +22,15 @@ export default class App extends Component {
     Font.loadAsync({
       //'Montserrat-Regular': require('../assets/fonts/Montserrat/Montserrat-Regular.ttf'),
       //'Montserrat-Bold': require('../assets/fonts/Montserrat/Montserrat-Bold.ttf'),
-      'Roboto-Regular': require('../assets/fonts/Roboto/Roboto-Regular.ttf'),
-      'Roboto-Bold': require('../assets/fonts/Roboto/Roboto-Bold.ttf'),
+      'Inter-Regular': require('../assets/fonts/Inter/Inter-Regular.ttf'),
+      'Inter-Bold': require('../assets/fonts/Inter/Inter-Bold.ttf'),
     });
   }
 
   render() {
     return (
       <PaperProvider theme={RebalanceJaTheme}>
+        
         <SafeAreaView style={{
           flex: 1,
           paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,

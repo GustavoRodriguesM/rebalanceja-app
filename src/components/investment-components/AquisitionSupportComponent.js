@@ -86,7 +86,7 @@ export default props => {
             </View>
             <View style={{ alignItems: 'center', marginTop: Dimensions.get("screen").height * 0.01, marginBottom: Dimensions.get("screen").height * 0.01 }}>
                 <Button
-                    labelStyle={{color: useTheme().colors.text}}
+                    labelStyle={{color: '#000'}}
                     style={{ backgroundColor: useTheme().colors.primary, width: '60%' }}
                     onPress={props.onPressAquisitionSupport}
                 >Aportar</Button>

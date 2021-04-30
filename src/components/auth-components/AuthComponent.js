@@ -119,6 +119,7 @@ class Auth extends Component {
                         <TextInput
                             mode="outlined"
                             label="E-mail"
+                            autoCapitalize='none'
                             keyboardType='email-address'
                             style={{ backgroundColor: '#262626' }}
                             theme={{ colors: { text: '#fff', placeholder: '#fff', primary: '#fff' } }}

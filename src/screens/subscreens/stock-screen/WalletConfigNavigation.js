@@ -4,6 +4,8 @@ import AquisitionConfigSubscreen from './AquisitionConfigSubscreen';
 import WalletConfigSubscreen from './WalletConfigSubscreen';
 import { useTheme } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
+import AquisitionFixedIncomeSubscreen from './AquisitionFixedIncomeSubscreen';
+import AquisitionVariableIncomeSubscreen from './AquisitionVariableIncomeSubscreen';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -24,10 +26,10 @@ export default props => {
                     options={{ title: "Configurações gerais" }}
                     component={WalletConfigSubscreen}
                 />
-                <Tab.Screen 
+                <Tab.Screen
                     name="AquisitionConfigSubscreen"
-                    options={{ title: "Ativos" }} 
-                    component={AquisitionConfigSubscreen} 
+                    options={{ title: "Ativos" }}
+                    component={AquisitionConfigSubscreen}
                 />
             </Tab.Navigator>
         </>

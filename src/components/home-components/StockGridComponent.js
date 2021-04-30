@@ -1,12 +1,13 @@
 import React from 'react'
 import { Dimensions, StyleSheet, Text, View }  from 'react-native'
+import { useTheme } from 'react-native-paper'
 import BRLCurrencyFormat from '../../utils/BRLCurrencyFormat'
 
 export default props => {
     const style = StyleSheet.create({
         component: {
-            borderColor: '#5b5555',//props.bgColor,
-            backgroundColor: '#5b5555',//'#161616',
+            borderColor: '#2d2a32',//props.bgColor,
+            backgroundColor: '#2d2a32',//'#161616',
             borderWidth: 1,
             marginTop: Dimensions.get("screen").width * 0.05,
             width: Dimensions.get("screen").width * 0.5,
@@ -28,7 +29,7 @@ export default props => {
 
     return (
         <View style={style.component}>
-            <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16}}>
+            <Text style={{ color: useTheme().colors.primary, fontWeight: 'bold', fontSize: 16}}>
                 {props.gridName}
             </Text>
             <Text style={style.TextStyle}>

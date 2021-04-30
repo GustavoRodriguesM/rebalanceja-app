@@ -296,7 +296,6 @@ class FinancialSupportSubscreen extends Component {
                     <Button
                         icon="content-save"
                         mode="contained"
-                        labelStyle={{ color: '#fff' }}
                         onPress={() => { this.showConfirmDialog() }}
                         style={{
                             backgroundColor: this.props.theme.colors.primary, borderRadius: 100, margin: Dimensions.get('screen').width * 0.05,

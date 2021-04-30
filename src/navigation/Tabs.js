@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Dimensions } from 'react-native'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
@@ -6,17 +6,13 @@ import HomeScreen from '../screens/HomeScreen'
 import InvestmentScreen from '../screens/InvestmentScreen'
 import StockScreen from '../screens/StockScreen'
 import ProfileScreen from '../screens/ProfileScreen'
-import { withTheme } from 'react-native-paper'
+import { useTheme } from 'react-native-paper'
 
 const BottomTabs = createBottomTabNavigator();
 
-class Tabs extends Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
+export default props => {
+    return (
+        <>
             <BottomTabs.Navigator
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused, color, size }) => {
@@ -33,7 +29,7 @@ class Tabs extends Component {
                                 iconName = 'dollar-sign';
                                 break;
                             case 'ProfileScreen':
-                                iconName = 'user'
+                                iconName = 'user-alt'
                                 break;
                         }
 
@@ -42,10 +38,10 @@ class Tabs extends Component {
                 })}
 
                 tabBarOptions={{
-                    activeBackgroundColor: this.props.theme.colors.tabsMenu.active,
-                    inactiveBackgroundColor: this.props.theme.colors.tabsMenu.inactive,
+                    activeBackgroundColor: useTheme().colors.tabsMenu.active,
+                    inactiveBackgroundColor: useTheme().colors.tabsMenu.inactive,
                     activeTintColor: '#fff',
-                    inactiveTintColor: this.props.theme.colors.tabsMenu.inactiveTintColor,
+                    inactiveTintColor: useTheme().colors.tabsMenu.inactiveTintColor,
                     showLabel: true,
                     labelStyle: {
                         marginBottom: 5,
@@ -56,12 +52,10 @@ class Tabs extends Component {
                     }
                 }}>
                 <BottomTabs.Screen name="HomeScreen" component={HomeScreen} options={{ title: 'Início' }} />
-                <BottomTabs.Screen name="InvestmentScreen" component={InvestmentScreen} options={{ title: 'Investimentos' }} />
+                <BottomTabs.Screen name="InvestmentScreen" component={InvestmentScreen} options={{ title: 'Rebalanceamento' }} />
                 <BottomTabs.Screen name="StockScreen" component={StockScreen} options={{ title: 'Ativos' }} />
                 <BottomTabs.Screen name="ProfileScreen" component={ProfileScreen} options={{ title: 'Perfil' }} />
             </BottomTabs.Navigator>
-        )
-    }
+        </>
+    )
 }
-
-export default withTheme(Tabs);

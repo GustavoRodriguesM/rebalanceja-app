@@ -4,6 +4,18 @@ export class UtilService {
         return "http://192.168.1.67:9000";
     }
 
+    getStockBySymbol = (stockSymbol) => {
+        return this.getServerHost().concat("/stocks/findBySymbol/").concat(stockSymbol);
+    }
+
+    getExistsInActiveWalletUrl = () => {
+        return this.getServerHost().concat("/aquisition/exists");
+    }
+
+    getChangeAllocateAquisitonUrl = (idAquisition, idWallet) => {
+        return this.getServerHost().concat("/aquisition/").concat(idAquisition).concat("/wallet/").concat(idWallet).concat("/changeAllocate");
+    }
+
     getAquisitionsByWallet= (idWallet) => {
         return this.getServerHost().concat("/wallets/").concat(idWallet);
     }

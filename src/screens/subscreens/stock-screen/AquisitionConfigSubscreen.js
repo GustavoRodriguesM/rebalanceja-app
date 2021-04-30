@@ -1,31 +1,49 @@
 import React, { useEffect, useState } from 'react'
-import { Dimensions, ScrollView, View } from 'react-native'
-import { Card, Divider, FAB, Paragraph, Portal, useTheme, Provider, Button, Appbar } from 'react-native-paper'
+import { ScrollView, View } from 'react-native'
+import { Paragraph, useTheme, Appbar, Portal, FAB, Provider } from 'react-native-paper'
 import { WalletService } from '../../../services/WalletService'
-import BRLCurrencyFormat from './../../../utils/BRLCurrencyFormat'
+import { AquisitionService } from '../../../services/AquisitionService'
+import CardStockComponent from '../../../components/stocks-components/CardStockComponent'
+
 
 export default props => {
 
     const [aquisitions, setAquisitions] = useState([])
+    const [description, setDescription] = useState([])
 
-    /* FAB */
-    const [state, setState] = useState({ open: false });
-
+    const [state, setState] = React.useState({ open: false });
     const onStateChange = ({ open }) => setState({ open });
-
     const { open } = state;
-    /* FAB */
+
+    const  fetchMyAPI = async () => {
+        let walletLocal = await new WalletService().getActiveWallet();
+        let walletStocks = await new WalletService().getAquisitionsByWallet(walletLocal.idWallet);
+        setDescription(walletLocal.description)
+        setAquisitions(walletStocks)
+    }
+
+    useEffect(() => {
+        
+            fetchMyAPI();
+    },[])
 
 
     useEffect(() => {
-        async function fetchMyAPI() {
-            let walletLocal = await new WalletService().getActiveWallet();
-            let walletStocks = await new WalletService().getAquisitionsByWallet(walletLocal.idWallet);
+        props.navigation.addListener('focus', async () => {
+            fetchMyAPI();
+        });
+    },[])
 
-            setAquisitions(walletStocks)
-        }
-        fetchMyAPI()
-    }, []);
+    const onToggleSwitch = async (obj, index) => {
+        let aquisitionsLocal = [...aquisitions]
+        let objLocal = obj
+        let walletLocal = await new WalletService().getActiveWallet();
+        objLocal.allocate = !objLocal.allocate
+        aquisitionsLocal[index] = objLocal;
+        await new AquisitionService().changeAllocate(obj.idAquisition, walletLocal.idWallet);
+        setAquisitions(aquisitionsLocal)
+    }
+
 
 
     const getStockListCard = () => {
@@ -34,84 +52,67 @@ export default props => {
 
         aquisitions.forEach((obj, index) => {
             components.push(
-                <Card key={index} style={{
-                    width: Dimensions.get('screen').width * 0.8,
-                    marginLeft: Dimensions.get('screen').width * 0.1,
-                    marginRight: Dimensions.get('screen').width * 0.1
-                }}
-                    onLongPress={() => console.log("LongPress")}>
-                    <Card.Title title={obj.stock.symbol} titleStyle={{ color: colorPrimary }} subtitle={obj.stock.category.description} />
-                    <Card.Content>
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                alignItems: 'baseline',
-                                justifyContent: 'space-between'
-                            }}>
-                            <Paragraph>Preço unitário</Paragraph>
-                            <Paragraph>{"R$" + BRLCurrencyFormat(obj.stock.price)}</Paragraph>
-                        </View>
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                alignItems: 'baseline',
-                                justifyContent: 'space-between'
-                            }}>
-                            <Paragraph>Quantidade</Paragraph>
-                            <Paragraph>{obj.quantity}</Paragraph>
-                        </View>
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                alignItems: 'baseline',
-                                justifyContent: 'space-between'
-                            }}>
-                            <Paragraph>Peso</Paragraph>
-                            <Paragraph>{obj.weight}</Paragraph>
-                        </View>
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                alignItems: 'baseline',
-                                justifyContent: 'space-between'
-                            }}>
-                            <Paragraph>Aportar</Paragraph>
-                        </View>
-                        <Divider style={{
-                            backgroundColor: colorPrimary,
-                            marginTop: Dimensions.get('screen').height * 0.02,
-                            opacity: 0.3
-                        }} />
-                    </Card.Content>
-                </Card>
-            )
-        })
+                <CardStockComponent
+                    key={index}
+                    indexKey={index}
+                    obj={obj}
+                    lengthList={aquisitions.length}
+                    colorSwitch={colorPrimary}
+                    colorDivider={colorPrimary}
+                    colorTitle={colorPrimary}
+                    onToggleSwitch={onToggleSwitch} />
+                )
+            }
+        )
 
         return components;
     }
 
     return (
-        <View style={{ backgroundColor: useTheme().colors.viewBackground }}>
-            <Appbar.Header>
-                <Appbar.Content title={description} subtitle={"Alterando carteira"} style={{ alignItems: 'center' }} />
-            </Appbar.Header>
+        <View style={{ backgroundColor: useTheme().colors.viewBackground, flex: 1 }}>
             <ScrollView>
+                <Appbar.Header>
+                    <Appbar.Content title={description} subtitle={"Ativos"} style={{ alignItems: 'center' }} />
+                </Appbar.Header>
                 <Paragraph>Adicione seus ativos aqui!</Paragraph>
                 <Paragraph>Qualquer ação é salva automaticamente</Paragraph>
-                <View style={{ alignItems: 'center' }}>
-                    <Button mode="contained"
-                        style={{
-                            backgroundColor: useTheme().colors.primary,
-                            width: '50%'
-                        }}
-                    >Adicionar</Button>
-                </View>
+
                 <View >
-                    <View style={{ flexDirection: 'row', flex: 1, flexWrap: 'wrap' }}>
+                    <View style={{ flex: 1 }}>
                         {getStockListCard()}
                     </View>
                 </View>
             </ScrollView>
+            <Provider>
+                <Portal>
+                    <FAB.Group
+                        open={open}
+                        icon={'plus'}
+                        color={useTheme().colors.viewBackground}
+                        fabStyle={{
+                            backgroundColor: useTheme().colors.primary,
+                        }}
+                        actions={[
+                            {
+                                icon: 'star',
+                                label: 'Renda variável',
+                                onPress: async () => props.navigation.navigate('AquisitionVariableIncomeSubscreen', await new WalletService().getActiveWallet()),
+                            },
+                            {
+                                icon: 'email',
+                                label: 'Renda fixa',
+                                onPress: async () => props.navigation.navigate('AquisitionFixedIncomeSubscreen', await new WalletService().getActiveWallet()),
+                            }
+                        ]}
+                        onStateChange={onStateChange}
+                        onPress={() => {
+                            if (open) {
+                                // do something if the speed dial is open
+                            }
+                        }}
+                    />
+                </Portal>
+            </Provider>
         </View>
     )
 }

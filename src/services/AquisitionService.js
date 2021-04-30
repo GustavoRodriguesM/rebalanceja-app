@@ -9,6 +9,18 @@ export class AquisitionService {
         this.authService = new AuthService();
     }
 
+    async changeAllocate(idAquisition, idWallet) {
+        let accessToken = await this.authService.getAccessToken();
+        await axios({
+            method: 'put',
+            url: this.utilService.getChangeAllocateAquisitonUrl(idAquisition, idWallet),
+            headers: {Authorization: 'Bearer ' + accessToken }
+        }).then((response) => {
+        }).catch((response) => {
+            console.log("Falha ao chamar: changeAllocate(" + idAquisition + ", " + idWallet + ")");
+            console.log(response.response)
+        });
+    }
 
     async updateQuantity(state, data) {
         let accessToken = await this.authService.getAccessToken();
@@ -18,7 +30,6 @@ export class AquisitionService {
             headers: {Authorization: 'Bearer ' + accessToken },
             data: data
         }).then((response) => {
-            console.log("Funcionou!");
         }).catch((response) => {
             console.log("Falha ao chamar: updateQuantity()");
             console.log(response.response)

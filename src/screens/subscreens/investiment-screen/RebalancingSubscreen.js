@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Dimensions, FlatList, Keyboard, Text, View } from 'react-native'
-import { Button, TextInput, useTheme } from 'react-native-paper';
+import { Dimensions, FlatList, Keyboard, Text, View, ScrollView } from 'react-native'
+import { Appbar, Button, TextInput, useTheme } from 'react-native-paper';
 import { RebalancingService } from '../../../services/RebalancingService';
 import { AuthService } from '../../../services/AuthService';
 import AquisitionSupportComponent from '../../../components/investment-components/AquisitionSupportComponent';
@@ -32,7 +32,7 @@ export default props => {
 
     useEffect(() => {
         async function dismissSnackbar() {
-            if(showSnackbar){
+            if (showSnackbar) {
                 setTimeout(
                     () => {
                         setShowSnackbar(false)
@@ -67,63 +67,62 @@ export default props => {
         }
     }
 
-
-
-    const renderItemAquisition = ({ index }) => {
-        let selectedAquisition = aquisitionsSupports[index]
-        return (
-            <AquisitionSupportComponent
+    const renderItemAquisition = () => {
+        let components = []
+        aquisitionsSupports.forEach((element, index) => {
+            components.push(<AquisitionSupportComponent
                 key={index}
-                gridName={selectedAquisition.aquisitionQuoteDTO.stock.symbol}
-                categoryDescription={selectedAquisition.aquisitionQuoteDTO.stock.category.description}
-                categoryColor={selectedAquisition.aquisitionQuoteDTO.stock.category.defaultColor}
-                buyValue={selectedAquisition.buyValue}
-                buyQuantity={selectedAquisition.buyQuantity}
-                priceInBRL={selectedAquisition.aquisitionQuoteDTO.stock.priceInBRL}
-                percentualDifference={selectedAquisition.percentualDifferenceOriginal}
+                gridName={element.aquisitionQuoteDTO.stock.symbol}
+                categoryDescription={element.aquisitionQuoteDTO.stock.category.description}
+                categoryColor={element.aquisitionQuoteDTO.stock.category.defaultColor}
+                buyValue={element.buyValue}
+                buyQuantity={element.buyQuantity}
+                priceInBRL={element.aquisitionQuoteDTO.stock.priceInBRL}
+                percentualDifference={element.percentualDifferenceOriginal}
                 onPressAquisitionSupport={() => {
-                    props.navigation.navigate('FinancialSupportSubscreen', { aquisition: selectedAquisition, onRegister: onRegister });
+                    props.navigation.navigate('FinancialSupportSubscreen', { aquisition: element, onRegister: onRegister });
                 }}
 
             />)
+        });
+
+        return components;
     }
 
     return (
         <>
             <SnackBar visible={showSnackbar} textMessage="Nenhum aporte necessário por enquanto!" actionHandler={() => { setShowSnackbar(false) }} actionText="Fechar" />
             <View style={useTheme().styles.defaultBackgroundWithFlex}>
-                <Text style={{
-                    marginLeft: Dimensions.get("screen").width * 0.05,
-                    marginTop: Dimensions.get("screen").width * 0.05,
-                    fontSize: 16,
-                    color: useTheme().colors.text
-                }}>Rebalanceamento de ativos</Text>
-                <View style={{ margin: Dimensions.get("screen").width * 0.05 }}>
-                    <TextInput
-                        label="Aporte"
-                        mode="flat"
-                        keyboardType='decimal-pad'
-                        value={financialSupport.toString()}
-                        style={{ backgroundColor: useTheme().colors.textInputBackground, marginBottom: 10 }}
-                        theme={{ colors: { text: useTheme().colors.text, placeholder: useTheme().colors.text, primary: useTheme().colors.text } }}
-                        onChangeText={financialSupport => setFinancialSupport(financialSupport)} />
-                    <Button mode="contained"
-                        loading={isLoading}
-                        style={{ backgroundColor: useTheme().colors.primary }}
-                        onPress={rebalanceStocks}
-                    >
-                        Rebalancear
-                </Button>
-                </View>
-                <View>
-                    <FlatList
-                        style={{ maxHeight: Dimensions.get("screen").height * 0.60 }}
-                        data={aquisitionsSupports}
-                        renderItem={renderItemAquisition}
-                        keyExtractor={(item, index) => index.toString()}
-                        contentContainerStyle={{ padding: 10 }}
-                    />
-                </View>
+                <ScrollView>
+                    <Appbar.Header>
+                        <Appbar.Content title={"Rebalanceamento"} style={{ alignItems: 'center' }} />
+                    </Appbar.Header>
+                    <Text style={{
+                        marginLeft: Dimensions.get("screen").width * 0.05,
+                        marginTop: Dimensions.get("screen").width * 0.05,
+                        fontSize: 16,
+                        color: useTheme().colors.text
+                    }}>Rebalanceamento de ativos</Text>
+                    <View style={{ margin: Dimensions.get("screen").width * 0.05 }}>
+                        <TextInput
+                            label="Aporte"
+                            mode="flat"
+                            keyboardType='decimal-pad'
+                            value={financialSupport.toString()}
+                            style={{ backgroundColor: useTheme().colors.textInputBackground, marginBottom: 10 }}
+                            theme={{ colors: { text: useTheme().colors.text, placeholder: useTheme().colors.text, primary: useTheme().colors.text } }}
+                            onChangeText={financialSupport => setFinancialSupport(financialSupport)} />
+                        <Button mode="contained"
+                            loading={isLoading}
+                            style={{ backgroundColor: useTheme().colors.primary }}
+                            onPress={rebalanceStocks}>
+                            Calcular aportes
+                        </Button>
+                    </View>
+                    <View>
+                        {renderItemAquisition()}
+                    </View>
+                </ScrollView>
             </View>
         </>
     )
