@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Dimensions, ScrollView, Text, View } from 'react-native'
 import GeneralInvestComponent from '../components/home-components/GeneralInvestComponent'
 import StockGridComponent from '../components/home-components/StockGridComponent'
@@ -7,53 +7,53 @@ import WelcomeComponent from '../components/home-components/WelcomeComponent'
 import { GeneralDataService } from '../services/GeneralDataService'
 import { AuthService } from '../services/AuthService'
 import DailyGeneralDataChart from '../components/home-components/charts/DailyGeneralDataChart'
-import { withTheme } from 'react-native-paper'
+import { useTheme } from 'react-native-paper'
 
-class HomeScreen extends Component {
+export default props => {
 
-    state = {
-        user: [],
-        name: []
-    }
+    const [name, setName] = useState("")
+    const [user, setUser] = useState([])
 
+    useEffect(() => {
+        getInitialParams();
+    }, [])
 
-
-    constructor(props) {
-        super(props);
-        this.generalDataService = new GeneralDataService();
-
-        this.authService = new AuthService();
-        this.teste();
-    }
-
-    async componentDidMount() {
-        this.props.navigation.addListener('focus', async () => {
-            let hasTokenValid = await this.authService.hasTokenValid();
+    useEffect(() => {
+        props.navigation.addListener('focus', async () => {
+            let hasTokenValid = await new AuthService().hasTokenValid();
 
             if (!hasTokenValid) {
-                await this.authService.loginViaRefreshToken();
+                await new AuthService().loginViaRefreshToken();
             }
-            this.teste();
+            getInitialParams();
         });
+    }, [])
 
+
+    const getInitialParams = async () => {
+        let generalData = await new GeneralDataService().getGeneralData();
+
+        if(generalData === 204) {
+            props.navigation.navigate('InitialParamsScreen');
+        } else {
+            setUser(generalData);
+        }
+
+        setName(await new AuthService().getName())
     }
 
-    teste = async () => {
-        this.generalDataService.getGeneralData(this);
-        this.state.name = await this.authService.getName();
-    }
 
-    getGrid = () => {
+    const getGrid = () => {
         let components = [];
-        if (typeof this.state.user.generalCategories !== "undefined") {
-            for (let i = 0; i < this.state.user.generalCategories.length; i++) {
+        if (typeof user.generalCategories !== "undefined") {
+            for (let i = 0; i < user.generalCategories.length; i++) {
                 components.push(
                     <StockGridComponent key={i}
-                        gridName={this.state.user.generalCategories[i].category.description}
-                        bgColor={this.state.user.generalCategories[i].category.defaultColor}
-                        totalInvestment={this.state.user.generalCategories[i].sumStocks}
-                        actual={this.state.user.generalCategories[i].actualPercentual}
-                        objective={this.state.user.generalCategories[i].idealPercentual}
+                        gridName={user.generalCategories[i].category.description}
+                        bgColor={user.generalCategories[i].category.defaultColor}
+                        totalInvestment={user.generalCategories[i].sumStocks}
+                        actual={user.generalCategories[i].actualPercentual}
+                        objective={user.generalCategories[i].idealPercentual}
                     />
                 )
             }
@@ -62,30 +62,26 @@ class HomeScreen extends Component {
         return components;
     }
 
-    render() {
-        return (
-            <View style={{ backgroundColor: this.props.theme.colors.viewBackground, flex: 1 }}>
-                <ScrollView>
+    return (
+        <View style={{ backgroundColor: useTheme().colors.viewBackground, flex: 1 }}>
+            <ScrollView>
 
-                    <WelcomeComponent name={this.state.name} />
-                    <GeneralInvestComponent
-                        totalInvestments={this.state.user.sumAllStocks}
-                    />
+                <WelcomeComponent name={name} />
+                <GeneralInvestComponent
+                    totalInvestments={user.sumAllStocks}
+                />
 
-                    <StockListComponent >
-                        {this.getGrid()}
-                    </StockListComponent>
+                <StockListComponent >
+                    {getGrid()}
+                </StockListComponent>
 
-                    <View style={{ marginTop: Dimensions.get('screen').height * 0.02 }}>
-                        <Text style={{ marginLeft: Dimensions.get('screen').width * 0.05, color: this.props.theme.colors.text, fontSize: 16 }}>Acompanhamento diário</Text>
-                        <View style={{ marginTop: Dimensions.get('screen').height * 0.01, alignItems: 'center' }}>
-                            <DailyGeneralDataChart />
-                        </View>
+                <View style={{ marginTop: Dimensions.get('screen').height * 0.02 }}>
+                    <Text style={{ marginLeft: Dimensions.get('screen').width * 0.05, color: useTheme().colors.text, fontSize: 16 }}>Acompanhamento diário</Text>
+                    <View style={{ marginTop: Dimensions.get('screen').height * 0.01, alignItems: 'center' }}>
+                        <DailyGeneralDataChart />
                     </View>
-                </ScrollView>
-            </View>
-        )
-    }
+                </View>
+            </ScrollView>
+        </View>
+    )
 }
-
-export default withTheme(HomeScreen);

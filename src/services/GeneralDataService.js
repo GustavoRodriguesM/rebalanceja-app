@@ -10,8 +10,9 @@ export class GeneralDataService {
         this.authService = new AuthService();
     }
 
-    async getGeneralData(state) {
+    async getGeneralData() {
         let accessToken = await this.authService.getAccessToken();
+        let generalData = [];
         await axios({
             method: 'get',
             url: this.utilService.getGeneralDataUrl(),
@@ -19,10 +20,10 @@ export class GeneralDataService {
         }).then((response) => {
             switch(response.status) {
                 case 200:
-                    state.setState({user: response.data})
+                    generalData = response.data;
                     break;
                 case 204:
-                    state.props.navigation.navigate('InitialParamsScreen');
+                    gerenalData = 204;
                     break;
                 default: 
                     console.log("Status inesperado");
@@ -34,6 +35,8 @@ export class GeneralDataService {
             console.log(response);
             console.log("Falha ao chamar: getGeneralData()");
         });
+        
+        return generalData;
     }
 
-}
+} 
