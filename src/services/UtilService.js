@@ -16,6 +16,10 @@ export class UtilService {
         return this.getServerHost().concat("/aquisition/").concat(idAquisition).concat("/wallet/").concat(idWallet).concat("/changeAllocate");
     }
 
+    getAquisitionsByWalletAndCategory= (idWallet, idCategory) => {
+        return this.getServerHost().concat("/wallets/").concat(idWallet).concat("/category/").concat(idCategory);
+    }
+
     getAquisitionsByWallet= (idWallet) => {
         return this.getServerHost().concat("/wallets/").concat(idWallet);
     }

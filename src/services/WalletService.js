@@ -38,6 +38,23 @@ export class WalletService {
         });
     }
 
+    async getAquisitionsByWalletAndCategory(idWallet, idCategory) {
+        let accessToken = await this.authService.getAccessToken();
+        let aquisitions = [];
+        await axios({
+            method: 'get',
+            url: this.utilService.getAquisitionsByWalletAndCategory(idWallet, idCategory),
+            headers: {Authorization: 'Bearer ' + accessToken }
+        }).then((response) => {
+            aquisitions = response.data;
+        }).catch((response) => {
+            console.log(response.response)
+            console.log("Falha ao chamar: getAquisitionsByWalletAndCategory()");
+        });
+
+        return aquisitions;
+    }
+
     async getAquisitionsByWallet(idWallet) {
         let accessToken = await this.authService.getAccessToken();
         let aquisitions = [];

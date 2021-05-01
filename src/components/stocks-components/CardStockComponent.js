@@ -31,7 +31,11 @@ export default props => {
     return (
         <Card key={props.indexKey} style={getCardStyle()}
             onLongPress={() => console.log("LongPress")}>
-            <Card.Title title={props.obj.stock.symbol} titleStyle={{ color: props.colorTitle }} subtitle={props.obj.stock.category.description} />
+            <Card.Title 
+                title={props.obj.stock.symbol} 
+                titleStyle={{ color: props.colorTitle }} 
+                //subtitle={props.obj.stock.category.description} />
+                subtitle={props.obj.stock.shortname} />
             <Card.Content>
                 {props.obj.stock.category.idCategory == 5 &&
                     <View
