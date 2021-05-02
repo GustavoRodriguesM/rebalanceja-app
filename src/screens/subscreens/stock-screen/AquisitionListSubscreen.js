@@ -40,6 +40,8 @@ export default (props) => {
                 colorSwitch={colorPrimary}
                 colorDivider={colorPrimary}
                 colorTitle={colorPrimary}
+                onClickDeleteIncome={onClickDeleteIncome}
+                onClickAlterIncome={onClickAlterIncome}
                 onToggleSwitch={onToggleSwitch} />
         )
     }
@@ -54,13 +56,32 @@ export default (props) => {
         setAquisitions(aquisitionsLocal)
     }
 
+    const onClickDeleteIncome = async (aquisition) => {
+        await new AquisitionService().deleteAquisition(aquisition.idAquisition)
+        await fetchMyAPI();
+    }
+
+    const onClickAlterIncome = async (aquisition) => {
+        let wallet = await new WalletService().getActiveWallet()
+        let alterAquisition = {
+            idWallet: wallet.idWallet,
+            aquisition: aquisition
+        }
+        if (aquisition.stock.category.idCategory !== 5) {
+            props.navigation.navigate('AquisitionVariableIncomeSubscreen', { alterAquisition: alterAquisition })
+        } else {
+            props.navigation.navigate('AquisitionFixedIncomeSubscreen', { alterAquisition: alterAquisition })
+        }
+
+    }
+
     return (
-            <View style={{ backgroundColor: useTheme().colors.viewBackground, flex: 1 }}>
-                <FlatList
-                    data={aquisitions}
-                    renderItem={renderItemAquisition}
-                    keyExtractor={item => item.idAquisition.toString()}
-                />
-            </View>
+        <View style={{ backgroundColor: useTheme().colors.viewBackground, flex: 1 }}>
+            <FlatList
+                data={aquisitions}
+                renderItem={renderItemAquisition}
+                keyExtractor={item => item.idAquisition.toString()}
+            />
+        </View>
     )
 }

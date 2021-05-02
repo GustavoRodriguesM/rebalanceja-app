@@ -109,12 +109,19 @@ export default props => {
                             {
                                 icon: 'star',
                                 label: 'Renda variável',
-                                onPress: async () => props.navigation.navigate('AquisitionVariableIncomeSubscreen', await new WalletService().getActiveWallet()),
+                                onPress: async () => {
+                                    let wallet = await new WalletService().getActiveWallet()
+                                    props.navigation.navigate('AquisitionVariableIncomeSubscreen', {idWallet: wallet.idWallet})
+                                
+                                },
                             },
                             {
                                 icon: 'email',
                                 label: 'Renda fixa',
-                                onPress: async () => props.navigation.navigate('AquisitionFixedIncomeSubscreen', await new WalletService().getActiveWallet()),
+                                onPress: async () => {
+                                    let wallet = await new WalletService().getActiveWallet()
+                                    props.navigation.navigate('AquisitionFixedIncomeSubscreen', {idWallet: wallet.idWallet})
+                                },
                             }
                         ]}
                         onStateChange={onStateChange}

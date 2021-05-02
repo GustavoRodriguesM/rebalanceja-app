@@ -51,4 +51,33 @@ export class AquisitionService {
         });
     }
 
+    async updateAquisition(obj) {
+        let accessToken = await this.authService.getAccessToken();
+        await axios({
+            method: 'put',
+            url: this.utilService.getUpdateAquisitionUrl(),
+            headers: {Authorization: 'Bearer ' + accessToken },
+            data: obj
+        }).then((response) => {
+            console.log("aquisicao alterada com sucesso");
+        }).catch((response) => {
+            console.log("Falha ao chamar: createAquisition()");
+            console.log(response.response)
+        });
+    }
+
+    async  deleteAquisition(idAquisition) {
+        let accessToken = await this.authService.getAccessToken();
+        await axios({
+            method: 'DELETE',
+            url: this.utilService.getDeleteAquisitionUrl(idAquisition),
+            headers: {Authorization: 'Bearer ' + accessToken },
+        }).then((response) => {
+            console.log("aquisicao removida com sucesso");
+        }).catch((response) => {
+            console.log("Falha ao chamar: createAquisition()");
+            console.log(response.response)
+        });
+    }
+
 }
