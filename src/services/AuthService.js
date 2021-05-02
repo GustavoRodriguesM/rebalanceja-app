@@ -13,6 +13,39 @@ export class AuthService {
         this.NAME = 'name';
     }
 
+    login = async (loginData) => {
+        let self = this;
+        let success = 0;
+        try {
+            var bodyFormData = new FormData();
+            bodyFormData.append('grant_type', 'password');
+            bodyFormData.append('username', loginData.username);
+            bodyFormData.append('password', loginData.password);
+
+            await axios({
+                method: "post",
+                url: self.utilService.getLoginUrl(),
+                data: bodyFormData,
+                headers: self.getBasicAuthorization()
+            })
+                .then(function (response) {
+                    self.saveToken(response);
+                    success = 1;
+                })
+                .catch(function (response) {
+                    if (response.response.data.error_description === 'Bad credentials') {
+                        success = 2;
+                    } else {
+                        success = 3;
+                    }
+                });
+        } catch (e) {
+            console.log(e);
+        }
+
+        return success;
+    }
+
     async register(state, userData) {
         try {
             await axios({

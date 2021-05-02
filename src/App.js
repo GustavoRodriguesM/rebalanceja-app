@@ -6,10 +6,10 @@ import Tabs from './navigation/Tabs';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { LogBox } from 'react-native';
 import * as Font from 'expo-font';
-import Auth from './components/auth-components/AuthComponent'
 import SignUpScreen from './screens/SignUpScreen';
 import InitialParamsScreen from './screens/InitialParamsScreen';
 import RebalanceJaTheme from './utils/rebalanceJaTheme'
+import AuthScreen from './screens/AuthScreen';
 
 
 
@@ -41,7 +41,7 @@ export default class App extends Component {
               screenOptions={{
                 headerShown: false
               }}>
-              <Stack.Screen name="AuthScreen" component={Auth} />
+              <Stack.Screen name="AuthScreen" component={AuthScreen} />
               <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
               <Stack.Screen name="HomeScreen" component={Tabs} />
               <Stack.Screen name="InitialParamsScreen" component={InitialParamsScreen} />

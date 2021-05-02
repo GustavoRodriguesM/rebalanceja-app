@@ -7,6 +7,17 @@ export default props => {
     if (props.type === 'undefined' || props.type == null) {
         return <></>;
     }
+    
+    if (props.type === 'emailField' && props.error)
+        return (
+            <View style={{
+                alignItems: 'center'
+            }}>
+                <Text style={{
+                    color: useTheme().colors.error
+                }}>Email inválido!</Text>
+            </View>
+        )
     if (props.type === 'withoutSpace' && props.error)
         return (
             <View style={{

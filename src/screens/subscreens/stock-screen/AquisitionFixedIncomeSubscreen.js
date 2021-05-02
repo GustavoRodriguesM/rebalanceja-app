@@ -5,7 +5,6 @@ import { Appbar, Button, TextInput, useTheme } from 'react-native-paper'
 import ErrorMessage from '../../../components/utils-components/ErrorMessage';
 import { AquisitionService } from '../../../services/AquisitionService';
 import { StockService } from '../../../services/StockService';
-import BRLCurrencyFormat from '../../../utils/BRLCurrencyFormat';
 
 export default props => {
     const { register, control, formState: { errors }, handleSubmit } = useForm({
