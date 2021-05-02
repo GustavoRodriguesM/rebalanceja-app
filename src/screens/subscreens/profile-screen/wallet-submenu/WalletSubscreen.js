@@ -1,11 +1,10 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react'
 import { Dimensions, Text, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler';
-import { List, withTheme } from 'react-native-paper';
-import { AsyncStorageService } from '../../../services/AsyncStorageService';
-import { AuthService } from '../../../services/AuthService';
-import { WalletService } from '../../../services/WalletService';
+import { Appbar, List, withTheme } from 'react-native-paper';
+import { AuthService } from '../../../../services/AuthService';
+import { WalletService } from '../../../../services/WalletService';
+import { AsyncStorageService } from '../../../../services/AsyncStorageService';
 
 class WalletSubscreen extends Component {
 
@@ -47,7 +46,7 @@ class WalletSubscreen extends Component {
         onPress={() => {
           new AsyncStorageService().setWalletToAlterConfig(this.state.wallets[index]);
 
-          this.props.navigation.navigate('WalletConfigNavigation', this.state.wallets[index]);
+          this.props.navigation.navigate('WalletConfigSubscreen', this.state.wallets[index]);
         }}
       />
     )
@@ -59,9 +58,10 @@ class WalletSubscreen extends Component {
         backgroundColor: this.props.theme.colors.viewBackground,
         flex: 1
       }}>
-        <View style={{ alignItems: 'center', marginTop: Dimensions.get('screen').height * 0.05 }}>
-          <Text style={this.props.theme.styles.stocksScreen.headerTextBold}>Carteiras</Text>
-        </View>
+        <Appbar.Header>
+          <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
+          <Appbar.Content title={"Carteiras"} style={{ alignItems: 'center' }} />
+        </Appbar.Header>
         <View>
           <FlatList
             style={{ maxHeight: Dimensions.get("screen").height * 0.60 }}

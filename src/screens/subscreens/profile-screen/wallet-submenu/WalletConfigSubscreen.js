@@ -2,7 +2,7 @@ import Slider from '@react-native-community/slider';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { Dimensions, Keyboard, ScrollView, View } from 'react-native';
-import { Text, TextInput, Title, List, useTheme, FAB } from 'react-native-paper';
+import { Text, TextInput, Title, List, useTheme, FAB, Appbar } from 'react-native-paper';
 import { AsyncStorageService } from '../../../../services/AsyncStorageService';
 import { CategoryService } from '../../../../services/CategoryService';
 import { WalletService } from '../../../../services/WalletService';
@@ -79,28 +79,8 @@ export default props => {
             await new WalletService().updateWallet(wallet.idWallet, dataObj);
             await new AsyncStorageService().removeWalletToAlterConfig();
             Keyboard.dismiss()
-            props.navigation.navigate('HomeScreen')
+            props.navigation.navigate('ProfileSubscreen')
         }
-    }
-
-    renderCategorySlider = ({ item, index }) => {
-        return (
-            <List.Item
-                title={item.description}
-                description={getActualIdealPercent(index) + '%'}
-                right={() => <Slider
-                    minimumValue={0}
-                    maximumValue={100}
-                    value={idealPercents[index]}
-                    onValueChange={(value) => changeIdealPercentValue(value, index)}
-                    style={{ width: 180, height: 40 }}
-                    step={0.5}
-                    thumbTintColor={useTheme().colors.primary}
-                    minimumTrackTintColor={useTheme().colors.primary}
-                    maximumTrackTintColor={useTheme().colors.primary}
-                />}
-            />
-        )
     }
 
     const getCategories = () => {
@@ -112,9 +92,10 @@ export default props => {
                     title={obj.description}
                     description={getActualIdealPercent(index) + '%'}
                     right={() => <Slider
+
                         minimumValue={0}
                         maximumValue={100}
-                        value={idealPercents[index]}
+                        value={idealPercents[index]?.idealPercent}
                         onValueChange={(value) => changeIdealPercentValue(value, index)}
                         style={{ width: 180, height: 40 }}
                         step={0.5}
@@ -131,6 +112,12 @@ export default props => {
 
     return (
         <>
+            <Appbar.Header>
+
+                <Appbar.BackAction onPress={() => props.navigation.goBack()} />
+                <Appbar.Content title={description} subtitle={"Alterando"} style={{ alignItems: 'center' }} />
+                <Appbar.Action icon="check" onPress={() => createWalletDetails()} />
+            </Appbar.Header>
             <ScrollView keyboardShouldPersistTaps='always'>
                 <View style={{ backgroundColor: useTheme().colors.viewBackground, flex: 1 }}>
                     <View>
@@ -159,7 +146,7 @@ export default props => {
                         <Text>Agora me diga, qual o percentual ideal em cada ativo para você?</Text>
                         <View style={{ alignItems: 'center', marginTop: Dimensions.get('screen').height * 0.02, marginBottom: Dimensions.get('screen').height * 0.05 }}>
                             {getIdealPercentsSum() != 100 &&
-                                <Text style={{color: '#CF3341'}}>O total da soma das categorias deve ser 100%!</Text>}
+                                <Text style={{ color: '#CF3341' }}>O total da soma das categorias deve ser 100%!</Text>}
                         </View>
                         <View>
                             <Text>Soma dos percentuais: {getIdealPercentsSum()}</Text>
@@ -171,20 +158,6 @@ export default props => {
 
                 </View>
             </ScrollView>
-
-            <FAB
-                style={{
-                    position: 'absolute',
-                    margin: 16,
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: useTheme().colors.primary
-                }}
-                small={false}
-                label={"Salvar alterações"}
-                icon="check"
-                onPress={() => createWalletDetails()}
-            />
         </>
     )
 }
