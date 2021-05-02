@@ -23,7 +23,7 @@ export default props => {
                                 iconName = 'home';
                                 break;
                             case 'InvestmentScreen':
-                                iconName = 'wallet';
+                                iconName = 'balance-scale';
                                 break;
                             case 'StockScreen':
                                 iconName = 'dollar-sign';
@@ -52,7 +52,7 @@ export default props => {
                     }
                 }}>
                 <BottomTabs.Screen name="HomeScreen" component={HomeScreen} options={{ title: 'Início' }} />
-                <BottomTabs.Screen name="InvestmentScreen" component={InvestmentScreen} options={{ title: 'Rebalanceamento' }} />
+                <BottomTabs.Screen name="InvestmentScreen" component={InvestmentScreen} options={{ title: 'Rebalancear' }} />
                 <BottomTabs.Screen name="StockScreen" component={StockScreen} options={{ title: 'Ativos' }} />
                 <BottomTabs.Screen name="ProfileScreen" component={ProfileScreen} options={{ title: 'Perfil' }} />
             </BottomTabs.Navigator>

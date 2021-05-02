@@ -268,7 +268,7 @@ export default props => {
                                         width: '50%'
                                     }}
                                     onPress={handleSubmit(onAlter)}>
-                                    Cadastrar
+                                    Alterar
                             </Button>
                             </View>
                         </View>

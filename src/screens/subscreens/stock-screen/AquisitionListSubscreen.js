@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, ScrollView, Text, View } from 'react-native'
+import { FlatList } from 'react-native'
 import { useTheme } from 'react-native-paper'
 import { WalletService } from '../../../services/WalletService'
 import { AquisitionService } from '../../../services/AquisitionService'
@@ -8,17 +8,18 @@ import CardStockComponent from '../../../components/stocks-components/CardStockC
 
 export default (props) => {
 
+    const [activeWallet, setActiveWallet] = useState()
     const [aquisitions, setAquisitions] = useState()
 
     const fetchMyAPI = async () => {
         let walletLocal = await new WalletService().getActiveWallet();
         let walletStocks = await new WalletService().getAquisitionsByWalletAndCategory(walletLocal.idWallet, props.route.params.idCategory);
 
+        setActiveWallet(walletLocal)
         setAquisitions(walletStocks)
     }
 
     useEffect(() => {
-
         fetchMyAPI();
     }, [])
 
@@ -35,6 +36,7 @@ export default (props) => {
             <CardStockComponent
                 key={index}
                 indexKey={index}
+                walletDescription={activeWallet.description}
                 obj={item}
                 lengthList={aquisitions.length}
                 colorSwitch={colorPrimary}
@@ -49,10 +51,9 @@ export default (props) => {
     const onToggleSwitch = async (obj, index) => {
         let aquisitionsLocal = [...aquisitions]
         let objLocal = obj
-        let walletLocal = await new WalletService().getActiveWallet();
         objLocal.allocate = !objLocal.allocate
         aquisitionsLocal[index] = objLocal;
-        await new AquisitionService().changeAllocate(obj.idAquisition, walletLocal.idWallet);
+        await new AquisitionService().changeAllocate(obj.idAquisition, activeWallet.idWallet);
         setAquisitions(aquisitionsLocal)
     }
 
@@ -62,9 +63,8 @@ export default (props) => {
     }
 
     const onClickAlterIncome = async (aquisition) => {
-        let wallet = await new WalletService().getActiveWallet()
         let alterAquisition = {
-            idWallet: wallet.idWallet,
+            idWallet: activeWallet.idWallet,
             aquisition: aquisition
         }
         if (aquisition.stock.category.idCategory !== 5) {
@@ -76,12 +76,15 @@ export default (props) => {
     }
 
     return (
-        <View style={{ backgroundColor: useTheme().colors.viewBackground, flex: 1 }}>
+        <>
             <FlatList
+                style={{
+                    backgroundColor: useTheme().colors.viewBackground
+                }}
                 data={aquisitions}
                 renderItem={renderItemAquisition}
                 keyExtractor={item => item.idAquisition.toString()}
             />
-        </View>
+        </>
     )
 }

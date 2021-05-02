@@ -2,7 +2,7 @@ import React from 'react'
 import { Dimensions, Text, View } from 'react-native'
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import { Button, List, Snackbar, TextInput, withTheme, RadioButton, Switch } from 'react-native-paper';
-import CategorySliderItem from '../../../components/stocks-components/CategorySliderItem';
+import CategorySliderItem from '../../../../components/stocks-components/CategorySliderItem';
 
 class WalletConfigSubscreen extends React.Component {
     constructor(props) {

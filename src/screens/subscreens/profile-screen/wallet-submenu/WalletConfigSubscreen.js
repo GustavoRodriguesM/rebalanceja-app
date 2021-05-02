@@ -3,9 +3,9 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { Dimensions, Keyboard, ScrollView, View } from 'react-native';
 import { Text, TextInput, Title, List, useTheme, FAB } from 'react-native-paper';
-import { AsyncStorageService } from '../../../services/AsyncStorageService';
-import { CategoryService } from '../../../services/CategoryService';
-import { WalletService } from '../../../services/WalletService';
+import { AsyncStorageService } from '../../../../services/AsyncStorageService';
+import { CategoryService } from '../../../../services/CategoryService';
+import { WalletService } from '../../../../services/WalletService';
 
 export default props => {
     const [description, setDescription] = useState("");

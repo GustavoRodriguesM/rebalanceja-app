@@ -1,15 +1,24 @@
 import React from 'react'
 import { Dimensions, View } from 'react-native'
-import { Card, Divider, Paragraph, Switch, Provider, Menu, Button } from 'react-native-paper'
+import { Card, Divider, Paragraph, Switch, Provider, Menu, Button, Modal, Text, Portal, useTheme } from 'react-native-paper'
 import BRLCurrencyFormat from '../../utils/BRLCurrencyFormat'
 
 export default props => {
 
     /* MENU */
     const [isMenuVisible, setIsMenuVisible] = React.useState(false);
-    const openMenu = () => setIsMenuVisible(true);
+    const openMenu = () =>  setIsMenuVisible(true);
     const closeMenu = () => setIsMenuVisible(false);
     /* MENU */
+
+    /* MODAL */
+    const [isModalVisible, setIsModalVisible] = React.useState(false);
+    const openModal = () => {
+        closeMenu()
+        setIsModalVisible(true)
+    }
+    const closeModal = () => setIsModalVisible(false);
+    /* MODAL */
 
     const getCardStyle = () => {
         let cardStyle = []
@@ -18,7 +27,7 @@ export default props => {
                 width: Dimensions.get('screen').width * 0.8,
                 marginLeft: Dimensions.get('screen').width * 0.1,
                 marginRight: Dimensions.get('screen').width * 0.1,
-                marginBottom: Dimensions.get('screen').height * 0.1
+                marginBottom: Dimensions.get('screen').height * 0.15
             }
         else {
             cardStyle = {
@@ -38,6 +47,7 @@ export default props => {
     const onClickDeleteIncome = () => {
         props.onClickDeleteIncome(props.obj)
         closeMenu()
+        closeModal()
     }
 
     const onToggleSwitch = (obj, indexKey) => {
@@ -46,7 +56,31 @@ export default props => {
 
     return (
         <>
-
+            <Portal>
+                <Modal
+                    visible={isModalVisible}
+                    contentContainerStyle={{
+                        borderRadius: 10,
+                        backgroundColor: '#2d2a32',
+                        padding: 20,
+                        marginRight: Dimensions.get('screen').width * 0.1,
+                        marginLeft: Dimensions.get('screen').width * 0.1
+                    }}>
+                    <Text>Deseja realmente remover o ativo {props.obj.stock.symbol} da carteira {props.walletDescription}?</Text>
+                    <View style={{
+                        flexDirection: 'row', 
+                        marginTop: Dimensions.get('screen').height * 0.02, 
+                        justifyContent: 'center'
+                    }}>
+                        <Button onPress={() => closeModal()}>
+                            Cancelar
+                        </Button>
+                        <Button onPress={() => onClickDeleteIncome()}>
+                            Remover
+                        </Button>
+                    </View>
+                </Modal>
+            </Portal>
             <Menu
                 visible={isMenuVisible}
                 onDismiss={closeMenu}
@@ -146,8 +180,8 @@ export default props => {
                         </Card.Content>
                     </Card>
                 }>
-                <Menu.Item onPress={() => {onClickAlterIncome()}} title="Alterar ativo" />
-                <Menu.Item onPress={() => {onClickDeleteIncome()}} title="Remover ativo" />
+                <Menu.Item onPress={() => { onClickAlterIncome() }} title="Alterar ativo" />
+                <Menu.Item onPress={() => { openModal() }} title="Remover ativo" />
             </Menu>
         </>
     )

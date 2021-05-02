@@ -39,35 +39,33 @@ export default props => {
 
 
     return (
-        <>
-            <Stack.Navigator
-                initialRouteName={"AquisitionConfigSubscreen"}
-                screenOptions={{
-                    headerShown: false
-                }}
-                tabBarOptions={{
-                    activeTintColor: useTheme().colors.primary,
-                    contentContainerStyle: {
-                        backgroundColor: useTheme().colors.viewBackground
-                    }
-                }}>
-                <Stack.Screen
-                    name="AquisitionConfigSubscreen"
-                    component={AquisitionConfigSubscreen}
-                />
+        <Stack.Navigator
+            initialRouteName={"AquisitionConfigSubscreen"}
+            screenOptions={{
+                headerShown: false
+            }}
+            tabBarOptions={{
+                activeTintColor: useTheme().colors.primary,
+                contentContainerStyle: {
+                    backgroundColor: useTheme().colors.viewBackground
+                }
+            }}>
+            <Stack.Screen
+                name="AquisitionConfigSubscreen"
+                component={AquisitionConfigSubscreen}
+            />
 
-                <Stack.Screen
-                    name="AquisitionFixedIncomeSubscreen"
-                    component={AquisitionFixedIncomeSubscreen}
-                />
+            <Stack.Screen
+                name="AquisitionFixedIncomeSubscreen"
+                component={AquisitionFixedIncomeSubscreen}
+            />
 
-                <Stack.Screen
-                    name="AquisitionVariableIncomeSubscreen"
-                    component={AquisitionVariableIncomeSubscreen}
-                />
+            <Stack.Screen
+                name="AquisitionVariableIncomeSubscreen"
+                component={AquisitionVariableIncomeSubscreen}
+            />
 
 
-            </Stack.Navigator>
-        </>
+        </Stack.Navigator>
     )
 }
