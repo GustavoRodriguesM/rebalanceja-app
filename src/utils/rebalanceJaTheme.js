@@ -1,21 +1,22 @@
 import { Platform, StatusBar } from "react-native";
-import { DefaultTheme } from "react-native-paper";
+import { configureFonts, DefaultTheme } from "react-native-paper";
 
 const FONTFAMILY = "Inter"
-const PRIMARY = '#ffd342'//"#fed139"
+const PRIMARY = '#ffd342'
 
 const customColors = {
   primary: PRIMARY,//'#CF3341',//#ed651b
-  viewBackground: '#161616',
-  inactivated: '#5b5555',
-  divider: '#5b5555',
-  viewBackgroundSecundary: '#5b5555',
+  viewBackground: '#121212',//'#161616',
+  inactivated: '#1f1f1f',//'#5b5555',
+  divider: '#1f1f1f',//'#5b5555',
+  viewBackgroundSecundary: '#1f1f1f',//'#5b5555',
   viewCardBackground: '#262626',
   text: '#fff',
   error: '#CF3341',
   textInputBackground: '#262626',
   modalBackground: '#262626',
-  surface: '#161616',
+  surface: '#121212',//'#161616',
+  subtitleCustom: '#d3c7a0',
   button: {
     background: PRIMARY,
     text: "#000"
@@ -50,6 +51,14 @@ const customStyles = {
     color: customColors.text,
     fontFamily: FONTFAMILY.concat('-Regular')
   },
+  textStylePrimary: {
+    color: customColors.primary,
+    fontFamily: FONTFAMILY.concat('-Regular')
+  },
+  subtextStyle: {
+    color: customColors.subtitleCustom,
+    fontFamily: FONTFAMILY.concat('-Regular')
+  },
   stocksScreen: {
     headerTextBold: {
       color: customColors.text,
@@ -63,5 +72,5 @@ export default theme = {
   ...DefaultTheme,
   myOwnProperty: true,
   colors: customColors,
-  styles: customStyles
+  styles: customStyles,
 };

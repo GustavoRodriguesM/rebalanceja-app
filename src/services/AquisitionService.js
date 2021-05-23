@@ -14,7 +14,7 @@ export class AquisitionService {
         await axios({
             method: 'put',
             url: this.utilService.getChangeAllocateAquisitonUrl(idAquisition, idWallet),
-            headers: {Authorization: 'Bearer ' + accessToken }
+            headers: { Authorization: 'Bearer ' + accessToken }
         }).then((response) => {
         }).catch((response) => {
             console.log("Falha ao chamar: changeAllocate(" + idAquisition + ", " + idWallet + ")");
@@ -22,12 +22,28 @@ export class AquisitionService {
         });
     }
 
+    async permitAdd() {
+        let accessToken = await this.authService.getAccessToken();
+        let permitAdd = false;
+        await axios({
+            method: 'get',
+            url: this.utilService.getPermitAddAquisitionUrl(),
+            headers: { Authorization: 'Bearer ' + accessToken }
+        }).then((response) => {
+            permitAdd = true;
+        }).catch((response) => {
+            permitAdd = false;
+        });
+
+        return permitAdd;
+    }
+
     async updateQuantity(state, data) {
         let accessToken = await this.authService.getAccessToken();
         await axios({
             method: 'put',
             url: this.utilService.getUpdateQuantityUrl(),
-            headers: {Authorization: 'Bearer ' + accessToken },
+            headers: { Authorization: 'Bearer ' + accessToken },
             data: data
         }).then((response) => {
         }).catch((response) => {
@@ -38,46 +54,52 @@ export class AquisitionService {
 
     async createAquisition(obj) {
         let accessToken = await this.authService.getAccessToken();
+        let success = false;
         await axios({
             method: 'post',
             url: this.utilService.getCreateAquisitionUrl(),
-            headers: {Authorization: 'Bearer ' + accessToken },
+            headers: { Authorization: 'Bearer ' + accessToken },
             data: obj
         }).then((response) => {
-            console.log("aquisicao criada com sucesso");
+            success = true;
         }).catch((response) => {
-            console.log("Falha ao chamar: createAquisition()");
-            console.log(response.response)
+            success = false;
         });
+
+        return success;
     }
 
     async updateAquisition(obj) {
         let accessToken = await this.authService.getAccessToken();
+        let success = false;
         await axios({
             method: 'put',
             url: this.utilService.getUpdateAquisitionUrl(),
-            headers: {Authorization: 'Bearer ' + accessToken },
+            headers: { Authorization: 'Bearer ' + accessToken },
             data: obj
         }).then((response) => {
-            console.log("aquisicao alterada com sucesso");
+            success = true;
         }).catch((response) => {
-            console.log("Falha ao chamar: createAquisition()");
-            console.log(response.response)
+            success = false;
         });
+
+        return success;
     }
 
-    async  deleteAquisition(idAquisition) {
+    async deleteAquisition(idAquisition) {
         let accessToken = await this.authService.getAccessToken();
+        let success = false;
         await axios({
             method: 'DELETE',
             url: this.utilService.getDeleteAquisitionUrl(idAquisition),
-            headers: {Authorization: 'Bearer ' + accessToken },
+            headers: { Authorization: 'Bearer ' + accessToken },
         }).then((response) => {
-            console.log("aquisicao removida com sucesso");
+            success = true;
         }).catch((response) => {
-            console.log("Falha ao chamar: createAquisition()");
-            console.log(response.response)
+            success = false;
         });
+
+        return success;
     }
 
 }

@@ -4,6 +4,7 @@ import { useTheme } from 'react-native-paper'
 import { WalletService } from '../../../services/WalletService'
 import { AquisitionService } from '../../../services/AquisitionService'
 import CardStockComponent from '../../../components/stocks-components/CardStockComponent'
+import Toast from 'react-native-toast-message';
 
 
 export default (props) => {
@@ -14,7 +15,6 @@ export default (props) => {
     const fetchMyAPI = async () => {
         let walletLocal = await new WalletService().getActiveWallet();
         let walletStocks = await new WalletService().getAquisitionsByWalletAndCategory(walletLocal.idWallet, props.route.params.idCategory);
-
         setActiveWallet(walletLocal)
         setAquisitions(walletStocks)
     }
@@ -31,7 +31,6 @@ export default (props) => {
     }, [])
 
     const renderItemAquisition = ({ item, index }) => {
-        let colorPrimary = '#ffd342'
         return (
             <CardStockComponent
                 key={index}
@@ -39,9 +38,6 @@ export default (props) => {
                 walletDescription={activeWallet.description}
                 obj={item}
                 lengthList={aquisitions.length}
-                colorSwitch={colorPrimary}
-                colorDivider={colorPrimary}
-                colorTitle={colorPrimary}
                 onClickDeleteIncome={onClickDeleteIncome}
                 onClickAlterIncome={onClickAlterIncome}
                 onToggleSwitch={onToggleSwitch} />
@@ -58,7 +54,21 @@ export default (props) => {
     }
 
     const onClickDeleteIncome = async (aquisition) => {
-        await new AquisitionService().deleteAquisition(aquisition.idAquisition)
+        if (await new AquisitionService().deleteAquisition(aquisition.idAquisition)) {
+            Toast.show({
+                type: 'success',
+                position: 'bottom',
+                text1: 'Oba!',
+                text2: 'O ativo ' + aquisition.stock.symbol + ' foi removido!'
+            });
+        } else {
+            Toast.show({
+                type: 'error',
+                position: 'bottom',
+                text1: 'Algo deu errado!',
+                text2: 'Não foi possivel remover o ativo ' + aquisition.stock.symbol + '. Tente novamente!'
+            });
+        }
         await fetchMyAPI();
     }
 
@@ -68,7 +78,7 @@ export default (props) => {
             aquisition: aquisition
         }
         if (aquisition.stock.category.idCategory !== 5) {
-            props.navigation.navigate('AquisitionVariableIncomeSubscreen', { alterAquisition: alterAquisition })
+            props.navigation.navigate('AlterVariableIncomeSubscreen', { alterAquisition: alterAquisition })
         } else {
             props.navigation.navigate('AquisitionFixedIncomeSubscreen', { alterAquisition: alterAquisition })
         }

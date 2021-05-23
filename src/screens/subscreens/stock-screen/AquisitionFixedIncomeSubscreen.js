@@ -5,6 +5,7 @@ import { Appbar, Button, TextInput, useTheme } from 'react-native-paper'
 import ErrorMessage from '../../../components/utils-components/ErrorMessage';
 import { AquisitionService } from '../../../services/AquisitionService';
 import { StockService } from '../../../services/StockService';
+import Toast from 'react-native-toast-message';
 
 export default props => {
     const { register, control, formState: { errors }, handleSubmit } = useForm({
@@ -21,7 +22,11 @@ export default props => {
             priceFixedIncome: data.priceInBRLForm
         }
         await new AquisitionService().createAquisition(obj);
-
+        Toast.show({
+            position: 'bottom',
+            text1: 'Oba!',
+            text2: 'O ativo ' + data.stockSymbolForm + ' foi cadastrado com sucesso!'
+        });
         props.navigation.goBack();
     }
 
@@ -67,6 +72,9 @@ export default props => {
                                                         stockSymbolOriginal: value
                                                     }
                                                     return await new StockService().existsInActiveWallet(data);
+                                                },
+                                                existsFixedIncome: async (value) => {
+                                                    return !await new StockService().searchStockFixedIncome(value);
                                                 }
                                             }
                                         }}

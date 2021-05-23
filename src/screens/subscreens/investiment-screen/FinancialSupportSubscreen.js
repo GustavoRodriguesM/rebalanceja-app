@@ -4,7 +4,7 @@ import { RebalancingService } from '../../../services/RebalancingService';
 import { AquisitionService } from '../../../services/AquisitionService';
 import { AuthService } from '../../../services/AuthService';
 import BRLCurrencyFormat from '../../../utils/BRLCurrencyFormat';
-import { Button, Dialog, HelperText, Paragraph, Portal, TextInput, withTheme } from 'react-native-paper';
+import { Appbar, Button, Dialog, HelperText, Paragraph, Portal, TextInput, withTheme } from 'react-native-paper';
 
 
 class FinancialSupportSubscreen extends Component {
@@ -32,30 +32,6 @@ class FinancialSupportSubscreen extends Component {
                 await this.authService.loginViaRefreshToken();
             }
         });
-    }
-
-    getLabelStyleButton(button) {
-        if (button === "buy") {
-            if (this.state.isBuyOperation) {
-                return {
-                    color: '#fff'
-                }
-            } else {
-                return {
-                    color: '#000'
-                }
-            }
-        } else {
-            if (!this.state.isBuyOperation) {
-                return {
-                    color: '#fff'
-                }
-            } else {
-                return {
-                    color: '#000'
-                }
-            }
-        }
     }
 
     getStyleButton(button) {
@@ -133,7 +109,7 @@ class FinancialSupportSubscreen extends Component {
         await this.aquisitionService.updateQuantity(this, data);
 
         //console.log(this.props.route);
-        this.props.route.params.onRegister(this.state.buyValue, this.state.isBuyOperation);   
+        this.props.route.params.onRegister(this.state.buyValue, this.state.isBuyOperation);
         this.props.navigation.goBack();
     }
 
@@ -141,10 +117,10 @@ class FinancialSupportSubscreen extends Component {
         return (
             <View style={this.props.theme.styles.defaultBackgroundWithFlex}>
                 <Portal>
-                    <Dialog 
-                        visible={this.state.showModal} 
-                        onDismiss={() => this.setState({ showModal: false })} 
-                        style={{backgroundColor: this.props.theme.colors.modalBackground}}
+                    <Dialog
+                        visible={this.state.showModal}
+                        onDismiss={() => this.setState({ showModal: false })}
+                        style={{ backgroundColor: this.props.theme.colors.modalBackground }}
                     >
                         <Dialog.Title>Confirmação</Dialog.Title>
                         <Dialog.Content>
@@ -172,64 +148,64 @@ class FinancialSupportSubscreen extends Component {
                         </Dialog.Actions>
                     </Dialog>
                 </Portal>
-                <View style={{ alignItems: 'center' }}>
-                    <Text style={{
-                        color: this.props.theme.colors.text,
-                        fontSize: 18,
-                        fontWeight: 'bold',
-                        marginTop: Dimensions.get('screen').height * 0.05
-                    }}>Comprar/Vender</Text>
-                    <View style={{ marginTop: Dimensions.get('screen').height * 0.05 }}>
-                        <View style={{ alignItems: 'center' }}>
-                            <Text style={{
-                                color: this.props.theme.colors.text,
-                                fontSize: 18,
-                                fontWeight: 'bold'
-                            }}>Atual</Text>
+                <View>
+                    <Appbar.Header>
+                        <Appbar.Content title={"Comprar/Vender"} style={{ alignItems: 'center' }} />
+                    </Appbar.Header>
+                    <View style={{ alignItems: 'center' }}>
+
+                        <View style={{ marginTop: Dimensions.get('screen').height * 0.02 }}>
+                            <View style={{ alignItems: 'center' }}>
+                                <Text style={{
+                                    color: this.props.theme.colors.text,
+                                    fontSize: 18,
+                                    fontWeight: 'bold'
+                                }}>Atual</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', }}>
+
+                                <Text style={{
+                                    color: this.props.theme.colors.text,
+                                    fontSize: 24,
+                                }}>{this.props.route.params.aquisition.aquisitionQuoteDTO.quantity} </Text>
+                                <Text style={{
+                                    color: this.props.theme.colors.primary,
+                                    fontSize: 24,
+                                    fontWeight: 'bold'
+                                }}>{this.props.route.params.aquisition.aquisitionQuoteDTO.stock.symbol}</Text>
+                            </View>
                         </View>
                         <View style={{ flexDirection: 'row', }}>
-
-                            <Text style={{
-                                color: this.props.theme.colors.text,
-                                fontSize: 24,
-                            }}>{this.props.route.params.aquisition.aquisitionQuoteDTO.quantity} </Text>
                             <Text style={{
                                 color: this.props.theme.colors.primary,
-                                fontSize: 24,
+                                fontSize: 20,
                                 fontWeight: 'bold'
-                            }}>{this.props.route.params.aquisition.aquisitionQuoteDTO.stock.symbol}</Text>
+                            }}>R$ </Text>
+                            <Text style={{
+                                color: this.props.theme.colors.text,
+                                fontSize: 20,
+                            }}>{BRLCurrencyFormat(this.props.route.params.aquisition.aquisitionQuoteDTO.total)} </Text>
+
                         </View>
-                    </View>
-                    <View style={{ flexDirection: 'row', }}>
-                        <Text style={{
-                            color: this.props.theme.colors.primary,
-                            fontSize: 20,
-                            fontWeight: 'bold'
-                        }}>R$ </Text>
-                        <Text style={{
-                            color: this.props.theme.colors.text,
-                            fontSize: 20,
-                        }}>{BRLCurrencyFormat(this.props.route.params.aquisition.aquisitionQuoteDTO.total)} </Text>
+                        <View style={{ flexDirection: 'row', marginTop: Dimensions.get('screen').height * 0.02, justifyContent: "space-between", }}>
 
-                    </View>
-                    <View style={{ flexDirection: 'row', marginTop: Dimensions.get('screen').height * 0.05, justifyContent: "space-between", }}>
-
-                        <Button
-                            icon="arrow-bottom-left-thick"
-                            mode="contained"
-                            labelStyle={this.getLabelStyleButton("buy")}
-                            style={this.getStyleButton("buy")}
-                            onPress={() => { this.setState({ isBuyOperation: true }) }}>
-                            Comprar
+                            <Button
+                                icon="arrow-bottom-left-thick"
+                                mode="contained"
+                                labelStyle={{ color: '#000' }}
+                                style={this.getStyleButton("buy")}
+                                onPress={() => { this.setState({ isBuyOperation: true }) }}>
+                                Comprar
                         </Button>
-                        <Button
-                            icon="arrow-top-right-thick"
-                            mode="contained"
-                            labelStyle={this.getLabelStyleButton("sell")}
-                            onPress={() => { this.setState({ isBuyOperation: false }) }}
-                            style={this.getStyleButton("sell")}>
-                            Vender
+                            <Button
+                                icon="arrow-top-right-thick"
+                                mode="contained"
+                                labelStyle={{ color: '#000' }}
+                                onPress={() => { this.setState({ isBuyOperation: false }) }}
+                                style={this.getStyleButton("sell")}>
+                                Vender
                         </Button>
+                        </View>
                     </View>
                 </View>
                 <View style={{
@@ -239,7 +215,7 @@ class FinancialSupportSubscreen extends Component {
                     borderTopRightRadius: 50,
                     borderTopLeftRadius: 50
                 }}>
-                    <View style={{ margin: Dimensions.get('screen').height * 0.05, }}>
+                    <View style={{ margin: Dimensions.get('screen').height * 0.02, alignItems: "center"}}>
                         <View style={{ alignItems: "center", }}>
                             <HelperText
                                 type="info"
@@ -249,10 +225,10 @@ class FinancialSupportSubscreen extends Component {
                             </HelperText>
                         </View>
                         {this.getType() == 1 &&
-                            <View>
+                            <View style={{ width: Dimensions.get('screen').width * 0.7 }}>
                                 <TextInput
                                     label="Valor em reais"
-                                    mode="outlined"
+                                    mode="flat"
                                     value={BRLCurrencyFormat(this.state.buyValue.toString())}
                                     keyboardType='numeric'
                                     style={{ backgroundColor: this.props.theme.colors.textInputBackground, marginBottom: 10 }}
@@ -261,7 +237,7 @@ class FinancialSupportSubscreen extends Component {
 
                                 <TextInput
                                     label="Quantidade"
-                                    mode="outlined"
+                                    mode="flat"
                                     value={this.state.buyQuantity}
                                     keyboardType='numeric'
                                     style={{ backgroundColor: this.props.theme.colors.textInputBackground, marginBottom: 10 }}
@@ -270,7 +246,7 @@ class FinancialSupportSubscreen extends Component {
                                 />
                             </View>}
                         {this.getType() == 2 &&
-                            <View>
+                            <View style={{ width: Dimensions.get('screen').width * 0.7 }}>
                                 <TextInput
                                     label="Valor em reais"
                                     mode="outlined"

@@ -1,10 +1,10 @@
 import React from 'react'
-import { Dimensions, StyleSheet, Text, View }  from 'react-native'
+import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import BRLCurrencyFormat from '../../utils/BRLCurrencyFormat'
-import { useTheme  } from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 
 export default props => {
-      
+
     const style = StyleSheet.create({
         component: {
             marginTop: Dimensions.get("screen").width * 0.05,
@@ -15,34 +15,31 @@ export default props => {
             marginRight: Dimensions.get("screen").width * 0.1,
             borderRadius: 10
         },
-        centerComponent:{ 
+        centerComponent: {
             flexGrow: 1,
             justifyContent: 'center',
             alignItems: 'center',
         },
-        TextStyle: {
-            color: useTheme().colors.primary // ffc70e
-        },
         totalInvestments: {
             fontSize: 24,
-            color: '#fff',
             fontWeight: 'bold',
         },
         sideStats: {
             marginTop: Dimensions.get("screen").width * 0.01,
-            flexDirection: 'row',
             justifyContent: "space-between",
+            alignItems: 'center'
         }
     })
 
     return (
         <View style={style.component}>
             <View style={style.centerComponent}>
-                <Text style={style.totalInvestments}>
+                <Text style={[useTheme().styles.textStyle, style.totalInvestments]}>
                     R$ {BRLCurrencyFormat(props.totalInvestments)}
                 </Text>
                 <View style={style.sideStats}>
-                    <Text style={style.TextStyle}>Total em investimentos</Text>
+                    <Text style={useTheme().styles.textStylePrimary}>Total em investimentos</Text>
+                    <Text style={useTheme().styles.textStylePrimary}>{props.walletDescription}</Text>
                 </View>
             </View>
         </View>

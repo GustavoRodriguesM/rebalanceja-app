@@ -1,139 +1,168 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { Dimensions, ScrollView, Text, View } from "react-native";
-import { Appbar, Button, HelperText, TextInput, Title, withTheme } from "react-native-paper";
+import { Appbar, Button, TextInput, useTheme } from "react-native-paper";
 import { SignUpService } from "../../services/SignUpService";
+import ErrorMessage from '../../components/utils-components/ErrorMessage';
+import { UserService } from "../../services/UserService";
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { convertDateToString } from "../../services/CommonService";
 
+export default props => {
 
-class UserDataComponent extends Component {
+    const [date, setDate] = useState(new Date());
 
-    constructor(props) {
-        super(props);
+    const { register, control, formState: { errors }, handleSubmit } = useForm({
+        mode: 'onSubmit',
+        reValidateMode: 'onBlur',
+    });
 
-        this.state = {
-            name: "",
-            email: "",
-            phoneNumber: "",
-            birthDate: "",
-            canValidate: true
+    const saveUserData = async (form) => {
+        let register = {
+            name: form.nameForm,
+            email: form.emailForm,
+            phoneNumber: form.phoneForm,
+            birthDate: form.birthdateForm
         }
-
-        this.signUpService = new SignUpService();
+        console.log(register)
+        await new SignUpService().register(register);
+        props.onCreateUser();
     }
 
-    saveUserData = () => {
-        this.setState({canValidate: true});
-        console.log("canValidate on saveUserData(): " + this.state.canValidate);
-        if (this.validForm()) {
-            let register = {
-                name: this.state.name,
-                email: this.state.email,
-                phoneNumber: this.state.phoneNumber,
-                birthDate: this.state.birthDate
-            }
-            this.signUpService.saveUserDataRegister(JSON.stringify(register));
-            this.props.onGoToSelectPlan();
-        }
-    }
+    return (
+        <ScrollView>
+            <Appbar.Header>
+                <Appbar.Content title="Dados pessoais" style={{ alignItems: 'center' }} />
+            </Appbar.Header>
+            <View style={{ padding: Dimensions.get('screen').width * 0.05, borderRadius: 20, marginTop: Dimensions.get('screen').width * 0.1 }}>
 
-    validForm = () => {
-        if (this.isEmpty(this.state.name))
-            return false;
-        if (this.isEmpty(this.state.email))
-            return false;
-        if (this.isEmpty(this.state.phoneNumber))
-            return false;
-        if (this.isEmpty(this.state.birthDate))
-            return false;
-        
-            
-        return true;
-    }
+                <View style={{ marginBottom: Dimensions.get('screen').width * 0.1 }}>
+                    <Text style={{ color: useTheme().colors.text }}>Por favor digite alguns dados básicos para que possamos iniciar!</Text>
+                </View>
 
-    hasErrors() {
-        return true;
-    }
-
-    isEmpty = (value) => {
-        console.log("this.state.canValidate: " +  this.state.canValidate )
-        if (this.state.canValidate) {
-            return value === 'undefined' || value === '';
-        }
-
-        return false;
-    }
-
-    render() {
-        return (
-            <ScrollView>
-                <Appbar.Header>
-                    <Appbar.Content title="Dados pessoais" style={{ alignItems: 'center' }} />
-                </Appbar.Header>
-                <View style={{ padding: Dimensions.get('screen').width * 0.05, borderRadius: 20, marginTop: Dimensions.get('screen').width * 0.1 }}>
-                    <Title style={{ color: this.props.theme.colors.primary }}></Title>
-                    <Text style={{ color: this.props.theme.colors.text }}>Por favor digite alguns dados basicos para que possamos iniciar!</Text>
-
-                    <HelperText type="error" visible={this.isEmpty(this.state.name)} style={{ color: '#fff' }}>
-                        Nome é obrigatório!
-                    </HelperText>
-                    <TextInput
-                        mode="outlined"
-                        label="Nome"
-                        onChangeText={(name) => this.setState({ name: name })}
-                        style={{ marginBottom: Dimensions.get('screen').height * 0.01, backgroundColor: '#262626' }}
-                        theme={{ colors: { text: '#fff', placeholder: '#fff', primary: '#fff' } }}
+                <View style={{ marginTop: Dimensions.get('screen').height * 0.01, marginBottom: Dimensions.get('screen').height * 0.02 }}>
+                    <Controller
+                        name="nameForm"
+                        control={control}
+                        rules={{
+                            required: true,
+                            minLength: 3,
+                            maxLength: 150,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                mode="flat"
+                                label="Nome"
+                                autoCapitalize='words'
+                                onBlur={onBlur}
+                                value={value}
+                                onChangeText={value => onChange(value)}
+                                style={{ marginBottom: Dimensions.get('screen').height * 0.02, backgroundColor: '#262626' }}
+                                theme={{ colors: { text: '#fff', placeholder: '#fff', primary: '#fff' } }}
+                            />
+                        )}
                     />
-
-                    <HelperText type="error" visible={this.isEmpty(this.state.email)} style={{ color: '#fff' }}>
-                        Email é obrigatório!
-                    </HelperText>
-                    <TextInput
-                        mode="outlined"
-                        label="Email"
-                        onChangeText={(email) => this.setState({ email: email })}
-                        keyboardType="email-address"
-                        style={{ marginBottom: Dimensions.get('screen').height * 0.01, backgroundColor: '#262626' }}
-                        theme={{ colors: { text: '#fff', placeholder: '#fff', primary: '#fff' } }}
-                    />
-
-                    <HelperText type="error" visible={this.isEmpty(this.state.phoneNumber)} style={{ color: '#fff' }}>
-                        Contato é obrigatório!
-                    </HelperText>
-                    <TextInput
-                        mode="outlined"
-                        placeholder="Contato"
-                        onChangeText={(phoneNumber) => this.setState({ phoneNumber: phoneNumber })}
-                        keyboardType='name-phone-pad'
-                        style={{ marginBottom: Dimensions.get('screen').height * 0.02, backgroundColor: '#262626' }}
-                        theme={{ colors: { text: '#fff', placeholder: '#fff', primary: '#fff' } }}
-                    />
-
-                    <HelperText type="error" visible={this.isEmpty(this.state.birthDate)} style={{ color: '#fff' }}>
-                        Data de nascimento é obrigatória!
-                    </HelperText>
-                    <TextInput
-                        mode="outlined"
-                        onChangeText={(birthDate) => this.setState({ birthDate: birthDate })}
-                        placeholder="Data de nascimento"
-                        style={{ marginBottom: Dimensions.get('screen').height * 0.02, backgroundColor: '#262626' }}
-                        theme={{ colors: { text: '#fff', placeholder: '#fff', primary: '#fff' } }}
+                    <ErrorMessage
+                        type={errors.nameForm?.type}
+                        error={errors.nameForm}
+                        minLength={3}
+                        maxLength={150}
                     />
                 </View>
 
-                <View style={{ alignItems: 'center' }}>
-                    <Button
-                        labelStyle={{ color: this.props.theme.colors.button.text }}
-                        style={{ backgroundColor: this.props.theme.colors.button.background, width: 200 }}
-                        onPress={() => this.saveUserData()}>Avançar</Button>
 
-                    <Text style={{ color: '#fff', marginTop: Dimensions.get('screen').height * 0.05 }} onPress={
-                        () => this.props.onGoToSignIn()}>
-                        Já está cadastrado? Entre agora mesmo
+
+                <View style={{ marginTop: Dimensions.get('screen').height * 0.01, marginBottom: Dimensions.get('screen').height * 0.02 }}>
+                    <Controller
+                        name="emailForm"
+                        control={control}
+                        rules={{
+                            required: true,
+                            minLength: 3,
+                            maxLength: 150,
+                            validate: {
+                                emailField: (value) => { return value.includes("@") },
+                                duplicatedEmail: async (value) => { return !(await new UserService().existsEmail(value)) }
+                            }
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                mode="flat"
+                                label="Email"
+                                keyboardType='email-address'
+                                autoCapitalize='none'
+                                onBlur={onBlur}
+                                value={value}
+                                onChangeText={value => onChange(value)}
+                                style={{ marginBottom: Dimensions.get('screen').height * 0.02, backgroundColor: '#262626' }}
+                                theme={{ colors: { text: '#fff', placeholder: '#fff', primary: '#fff' } }}
+                            />
+                        )}
+                    />
+                    <ErrorMessage
+                        type={errors.emailForm?.type}
+                        error={errors.emailForm}
+                        minLength={3}
+                        maxLength={150}
+                    />
+                </View>
+
+                <View style={{ marginTop: Dimensions.get('screen').height * 0.01, marginBottom: Dimensions.get('screen').height * 0.02 }}>
+                    <Controller
+                        name="birthdateForm"
+                        control={control}
+                        rules={{
+                            required: true,
+                            minLength: 10,
+                            maxLength: 10
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                mode="flat"
+                                label="Data de nascimento"
+                                onBlur={onBlur}
+                                value={value}
+                                maxLength={10}
+                                onChangeText={value => {
+                                    var v = value;
+                                    console.log(v)
+                                    if (v.length <= 10) {
+                                        if (v.match(/^\d{2}$/) !== null) {
+                                            value = v + '/';
+                                        } else if (v.match(/^\d{2}\/\d{2}$/) !== null) {
+                                            value = v + '/';
+                                        }
+                                    }
+                                    onChange(value)
+                                }}
+                                style={{ marginBottom: Dimensions.get('screen').height * 0.02, backgroundColor: '#262626' }}
+                                theme={{ colors: { text: '#fff', placeholder: '#fff', primary: '#fff' } }}
+                            />
+
+                        )}
+                    />
+                    <ErrorMessage
+                        type={errors.birthdateForm?.type}
+                        error={errors.birthdateForm}
+                        minLength={10}
+                        maxLength={10}
+                    />
+                </View>
+            </View>
+
+            <View style={{ alignItems: 'center', marginBottom: Dimensions.get('screen').height * 0.05 }}>
+                <Button
+                    labelStyle={{ color: useTheme().colors.button.text }}
+                    style={{ backgroundColor: useTheme().colors.button.background, width: 200 }}
+                    onPress={handleSubmit(saveUserData)}>Cadastrar</Button>
+
+                <Text style={{ color: '#fff', marginTop: Dimensions.get('screen').height * 0.05 }} onPress={
+                    () => props.onGoToSignIn()}>
+                    Já está cadastrado? Entre agora mesmo
                     </Text>
-                </View>
-            </ScrollView>
-        );
-    }
+            </View>
+        </ScrollView>
+    );
+
 
 }
-
-export default withTheme(UserDataComponent);

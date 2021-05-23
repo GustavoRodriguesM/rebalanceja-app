@@ -4,6 +4,8 @@ import { useTheme, Appbar, Portal, FAB, Provider, Snackbar, Image } from 'react-
 import { WalletService } from '../../../services/WalletService'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import AquisitionListSubscreen from './AquisitionListSubscreen'
+import { AquisitionService } from '../../../services/AquisitionService';
+import Toast from 'react-native-toast-message';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -35,19 +37,11 @@ export default props => {
 
     return (
         <>
-           
+
             <View style={{ backgroundColor: useTheme().colors.viewBackground, flex: 1 }}>
-            <Snackbar
-                
-                visible={false}
-                style={{
-                    backgroundColor: '#fff'
-                }}>
-                This is snackbar
-          </Snackbar>
                 <View style={{ height: Dimensions.get('window').height }}>
                     <Appbar.Header>
-                        <Appbar.Content title={description} subtitle={"Ativos"} style={{ alignItems: 'center' }} />
+                        <Appbar.Content title={description} subtitle={"Ativos"} style={[{ alignItems: 'center' }, useTheme().styles.textStyle]} />
                     </Appbar.Header>
                     <Tab.Navigator
                         initialRouteName="AquisitionsCategory1"
@@ -114,8 +108,18 @@ export default props => {
                                     icon: require('../../../../assets/imgs/variable-income-icon.png'),
                                     label: 'Renda variável',
                                     onPress: async () => {
+                                        if (!await new AquisitionService().permitAdd()) {
+                                            onStateChange({ open: false })
+                                            Toast.show({
+                                                type: 'error',
+                                                position: 'bottom',
+                                                text1: 'Poxa!',
+                                                text2: 'Para adicionar mais ativos, mude seu plano!'
+                                            });
+                                            return;
+                                        }
                                         let wallet = await new WalletService().getActiveWallet()
-                                        props.navigation.navigate('AquisitionVariableIncomeSubscreen', { idWallet: wallet.idWallet })
+                                        props.navigation.navigate('NewVariableIncomeSubscreen', { idWallet: wallet.idWallet })
 
                                     },
                                 },
@@ -123,16 +127,23 @@ export default props => {
                                     icon: require('../../../../assets/imgs/fixed-income-icon.png'),
                                     label: 'Renda fixa',
                                     onPress: async () => {
+                                        if (!await new AquisitionService().permitAdd()) {
+                                            onStateChange({ open: false })
+                                            Toast.show({
+                                                type: 'error',
+                                                position: 'bottom',
+                                                text1: 'Poxa!',
+                                                text2: 'Para adicionar mais ativos, mude seu plano!'
+                                            });
+                                            return;
+                                        }
                                         let wallet = await new WalletService().getActiveWallet()
                                         props.navigation.navigate('AquisitionFixedIncomeSubscreen', { idWallet: wallet.idWallet })
                                     },
                                 }
                             ]}
                             onStateChange={onStateChange}
-                            onPress={() => {
-                                if (open) {
-                                    // do something if the speed dial is open
-                                }
+                            onPress={async () => {
                             }}
                         />
                     </Portal>

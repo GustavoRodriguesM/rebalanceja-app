@@ -2,6 +2,19 @@ export class UtilService {
 
     getServerHost = () => {
         return "http://192.168.1.67:9000";
+        //return "https://still-mesa-03512.herokuapp.com";
+    }
+
+    getPermitAddAquisitionUrl = () => {
+        return this.getServerHost().concat("/aquisition/permit-add");
+    }
+
+    getStockExistsFixedIncomeUrl = (stockSymbol) => {
+        return this.getServerHost().concat("/stocks/exists/fixedIncome/").concat(stockSymbol);
+    }
+
+    getSearchUserUrl = (searchEmail) => {
+        return this.getServerHost().concat("/users/exists-email/").concat(searchEmail);
     }
 
     getStockBySymbol = (stockSymbol) => {
@@ -16,11 +29,11 @@ export class UtilService {
         return this.getServerHost().concat("/aquisition/").concat(idAquisition).concat("/wallet/").concat(idWallet).concat("/changeAllocate");
     }
 
-    getAquisitionsByWalletAndCategory= (idWallet, idCategory) => {
+    getAquisitionsByWalletAndCategory = (idWallet, idCategory) => {
         return this.getServerHost().concat("/wallets/").concat(idWallet).concat("/category/").concat(idCategory);
     }
 
-    getAquisitionsByWallet= (idWallet) => {
+    getAquisitionsByWallet = (idWallet) => {
         return this.getServerHost().concat("/wallets/").concat(idWallet);
     }
 
@@ -43,7 +56,7 @@ export class UtilService {
     getWalletPutUrl = (idWallet) => {
         return this.getServerHost().concat("/wallets/").concat(idWallet)
     }
-    
+
     getAvailableSubscriptionPlans = () => {
         return this.getServerHost().concat("/subscription-plans/active")
     }
@@ -55,10 +68,10 @@ export class UtilService {
     getDeleteAquisitionUrl = (idAquisition) => {
         return this.getServerHost().concat("/aquisition/").concat(idAquisition)
     }
-    
+
     getAllWallets = () => {
         return this.getServerHost().concat("/wallets/user")
-    }    
+    }
     getActiveWallet = () => {
         return this.getServerHost().concat("/wallets/user/active")
     }
@@ -79,8 +92,8 @@ export class UtilService {
         return this.getServerHost().concat("/general/data/")
     }
 
-    getFinancialSupportUrl = (financialSupport) => {
-        return this.getServerHost().concat("/rebalance/financial-support?financialSupport=").concat(financialSupport)
+    getFinancialSupportUrl = () => {
+        return this.getServerHost().concat("/rebalance/financial-support")
     }
 
 }

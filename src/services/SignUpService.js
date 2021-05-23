@@ -12,6 +12,7 @@ export class SignUpService {
     }
 
     async register(userData) {
+        console.log(userData)
         try {
             let objResponse = null;
             await axios({

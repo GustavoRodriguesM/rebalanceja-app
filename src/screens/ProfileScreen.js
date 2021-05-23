@@ -7,6 +7,8 @@ import WalletConfigSubscreen from './subscreens/profile-screen/wallet-submenu/Wa
 
 const Stack = createStackNavigator();
 
+
+//TODO: Alterar fontes
 export default props => {
 
     useEffect(() => {

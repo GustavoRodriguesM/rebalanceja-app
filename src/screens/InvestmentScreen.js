@@ -6,6 +6,7 @@ import RebalancingSubscreen from './subscreens/investiment-screen/RebalancingSub
 
 const Stack = createStackNavigator();
 
+//FIXME: Valor não está subtraindo/somando ao aportar
 export default class InvestmentScreen extends Component {
 
     constructor(props) {
@@ -30,8 +31,8 @@ export default class InvestmentScreen extends Component {
                 screenOptions={{
                     headerShown: false
                 }}>
-                <Stack.Screen 
-                    name="RebalancingSubscreen" 
+                <Stack.Screen
+                    name="RebalancingSubscreen"
                     component={RebalancingSubscreen} />
                 <Stack.Screen name="FinancialSupportSubscreen" component={FinancialSupportSubscreen} />
             </Stack.Navigator>

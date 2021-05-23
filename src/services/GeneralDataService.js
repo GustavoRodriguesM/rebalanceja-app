@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { AuthService } from "./AuthService";
 import { UtilService } from "./UtilService";
@@ -16,16 +15,16 @@ export class GeneralDataService {
         await axios({
             method: 'get',
             url: this.utilService.getGeneralDataUrl(),
-            headers: {Authorization: 'Bearer ' + accessToken }
+            headers: { Authorization: 'Bearer ' + accessToken }
         }).then((response) => {
-            switch(response.status) {
+            switch (response.status) {
                 case 200:
                     generalData = response.data;
                     break;
                 case 204:
-                    gerenalData = 204;
+                    generalData = 204;
                     break;
-                default: 
+                default:
                     console.log("Status inesperado");
                     break;
             }
@@ -35,8 +34,7 @@ export class GeneralDataService {
             console.log(response);
             console.log("Falha ao chamar: getGeneralData()");
         });
-        
         return generalData;
     }
 
-} 
+}

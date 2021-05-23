@@ -4,10 +4,33 @@ import { useTheme } from 'react-native-paper';
 
 export default props => {
 
+    console.log(props.type)
+
     if (props.type === 'undefined' || props.type == null) {
         return <></>;
     }
-    
+
+
+    if (props.type === 'duplicatedEmail' && props.error)
+        return (
+            <View style={{
+                alignItems: 'center'
+            }}>
+                <Text style={{
+                    color: useTheme().colors.error
+                }}>Email já está cadastrado</Text>
+            </View>
+        )
+    if (props.type === 'existsFixedIncome' && props.error)
+        return (
+            <View style={{
+                alignItems: 'center'
+            }}>
+                <Text style={{
+                    color: useTheme().colors.error
+                }}>Esse ativo já está cadastrado em outra carteira, escolha outro ticker</Text>
+            </View>
+        )
     if (props.type === 'emailField' && props.error)
         return (
             <View style={{

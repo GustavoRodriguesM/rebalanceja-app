@@ -11,13 +11,17 @@ export class RebalancingService {
         this.utilService = new UtilService();
     }
 
-    async rebalance(financialSupport) {
+    async rebalance(financialSupport: string) {
         let accessToken = await this.authService.getAccessToken();
         let responseList = [];
+        console.log(financialSupport)
         await axios({
             method: 'post',
-            url: this.utilService.getFinancialSupportUrl(financialSupport),
-            headers: {Authorization: 'Bearer ' + accessToken},
+            url: this.utilService.getFinancialSupportUrl(),
+            headers: { Authorization: 'Bearer ' + accessToken },
+            data: {
+                financialSupport: financialSupport.replace(".", "").replace(",", ".")
+            }
         }).then((response) => {
             responseList = response.data;
         }).catch((response) => {

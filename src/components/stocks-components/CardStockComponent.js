@@ -5,9 +5,14 @@ import BRLCurrencyFormat from '../../utils/BRLCurrencyFormat'
 
 export default props => {
 
+    const textStylePrimary = useTheme().styles.textStylePrimary
+    const textStyle = useTheme().styles.textStyle
+    const primaryColor = useTheme().colors.primary
+    const subtextStyle = useTheme().styles.subtextStyle
+
     /* MENU */
     const [isMenuVisible, setIsMenuVisible] = React.useState(false);
-    const openMenu = () =>  setIsMenuVisible(true);
+    const openMenu = () => setIsMenuVisible(true);
     const closeMenu = () => setIsMenuVisible(false);
     /* MENU */
 
@@ -66,10 +71,10 @@ export default props => {
                         marginRight: Dimensions.get('screen').width * 0.1,
                         marginLeft: Dimensions.get('screen').width * 0.1
                     }}>
-                    <Text>Deseja realmente remover o ativo {props.obj.stock.symbol} da carteira {props.walletDescription}?</Text>
+                    <Text style={textStyle}>Deseja realmente remover o ativo {props.obj.stock.symbol} da carteira {props.walletDescription}?</Text>
                     <View style={{
-                        flexDirection: 'row', 
-                        marginTop: Dimensions.get('screen').height * 0.02, 
+                        flexDirection: 'row',
+                        marginTop: Dimensions.get('screen').height * 0.02,
                         justifyContent: 'center'
                     }}>
                         <Button onPress={() => closeModal()}>
@@ -92,8 +97,9 @@ export default props => {
                         }}>
                         <Card.Title
                             title={props.obj.stock.symbol}
-                            titleStyle={{ color: props.colorTitle }}
-                            subtitle={props.obj.stock.longName} />
+                            titleStyle={[textStylePrimary, { fontWeight: 'bold' }]}
+                            subtitle={props.obj.stock.longName}
+                            subtitleStyle={subtextStyle} />
                         <Card.Content>
                             {props.obj.stock.category.idCategory == 5 &&
                                 <View
@@ -102,8 +108,8 @@ export default props => {
                                         alignItems: 'baseline',
                                         justifyContent: 'space-between'
                                     }}>
-                                    <Paragraph>Preço unitário</Paragraph>
-                                    <Paragraph>{"R$ " + BRLCurrencyFormat(props.obj.stock.price * props.obj.quantity)}</Paragraph>
+                                    <Paragraph style={textStyle}>Preço unitário</Paragraph>
+                                    <Paragraph style={textStyle}>{"R$ " + BRLCurrencyFormat(props.obj.stock.price * props.obj.quantity)}</Paragraph>
                                 </View>
                             }
                             {props.obj.stock.category.idCategory != 5 &&
@@ -113,8 +119,8 @@ export default props => {
                                         alignItems: 'baseline',
                                         justifyContent: 'space-between'
                                     }}>
-                                    <Paragraph>Preço unitário</Paragraph>
-                                    <Paragraph>{"R$ " + BRLCurrencyFormat(props.obj.stock.priceInBRL)}</Paragraph>
+                                    <Paragraph style={textStyle}>Preço unitário</Paragraph>
+                                    <Paragraph style={textStyle}>{"R$ " + BRLCurrencyFormat(props.obj.stock.priceInBRL)}</Paragraph>
                                 </View>
                             }
                             {(props.obj.stock.category.idCategory == 3 || props.obj.stock.category.idCategory == 4 || props.obj.stock.category.idCategory == 6) &&
@@ -124,8 +130,8 @@ export default props => {
                                         alignItems: 'baseline',
                                         justifyContent: 'space-between'
                                     }}>
-                                    <Paragraph>Preço local</Paragraph>
-                                    <Paragraph>{props.obj.stock.currency + " " + BRLCurrencyFormat(props.obj.stock.price)}</Paragraph>
+                                    <Paragraph style={textStyle}>Preço local</Paragraph>
+                                    <Paragraph style={textStyle}>{props.obj.stock.currency + " " + BRLCurrencyFormat(props.obj.stock.price)}</Paragraph>
                                 </View>
                             }
                             {(props.obj.stock.category.idCategory != 5) &&
@@ -135,8 +141,8 @@ export default props => {
                                         alignItems: 'baseline',
                                         justifyContent: 'space-between'
                                     }}>
-                                    <Paragraph>Posição</Paragraph>
-                                    <Paragraph>{"R$ " + BRLCurrencyFormat(props.obj.stock.priceInBRL * props.obj.quantity)}</Paragraph>
+                                    <Paragraph style={textStyle}>Posição</Paragraph>
+                                    <Paragraph style={textStyle}>{"R$ " + BRLCurrencyFormat(props.obj.stock.priceInBRL * props.obj.quantity)}</Paragraph>
                                 </View>
                             }
                             {props.obj.stock.category.idCategory != 5 &&
@@ -146,8 +152,8 @@ export default props => {
                                         alignItems: 'baseline',
                                         justifyContent: 'space-between'
                                     }}>
-                                    <Paragraph>Quantidade</Paragraph>
-                                    <Paragraph>{props.obj.quantity}</Paragraph>
+                                    <Paragraph style={textStyle}>Quantidade</Paragraph>
+                                    <Paragraph style={textStyle}>{props.obj.quantity}</Paragraph>
                                 </View>
                             }
                             <View
@@ -156,8 +162,8 @@ export default props => {
                                     alignItems: 'baseline',
                                     justifyContent: 'space-between'
                                 }}>
-                                <Paragraph>Peso</Paragraph>
-                                <Paragraph>{props.obj.weight}</Paragraph>
+                                <Paragraph style={textStyle}>Porcentagem ideal</Paragraph>
+                                <Paragraph style={textStyle}>{props.obj.idealPercentualWallet}%</Paragraph>
                             </View>
                             <View
                                 style={{
@@ -165,15 +171,35 @@ export default props => {
                                     alignItems: 'baseline',
                                     justifyContent: 'space-between'
                                 }}>
-                                <Paragraph>Aportar</Paragraph>
+                                <Paragraph style={textStyle}>Peso</Paragraph>
+                                <Paragraph style={textStyle}>{props.obj.weight}</Paragraph>
+                            </View>
+                            {(props.obj.stock.category.idCategory != 5 && props.obj.maxPrice > 0) &&
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'baseline',
+                                        justifyContent: 'space-between'
+                                    }}>
+                                    <Paragraph style={textStyle}>Preço teto</Paragraph>
+                                    <Paragraph style={textStyle}>R$ {BRLCurrencyFormat(props.obj.maxPrice)}</Paragraph>
+                                </View>
+                            }
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'baseline',
+                                    justifyContent: 'space-between'
+                                }}>
+                                <Paragraph style={textStyle}>Aportar</Paragraph>
                                 <Switch
                                     value={props.obj.allocate}
                                     onValueChange={() => onToggleSwitch(props.obj, props.indexKey)}
-                                    color={props.colorSwitch}
+                                    color={primaryColor}
                                 />
                             </View>
                             <Divider style={{
-                                backgroundColor: props.colorDivider,
+                                backgroundColor: primaryColor,
                                 marginTop: Dimensions.get('screen').height * 0.02,
                                 opacity: 0.3
                             }} />

@@ -4,6 +4,7 @@ import { AuthService } from '../services/AuthService'
 import { TextInput, Button, useTheme, HelperText } from 'react-native-paper'
 import ErrorMessage from '../components/utils-components/ErrorMessage'
 import { Controller, useForm } from 'react-hook-form'
+import AppButton from '../components/utils-components/AppButton';
 
 export default props => {
 
@@ -113,12 +114,11 @@ export default props => {
                         <Text style={{ color: '#fff' }}>Esqueci minha senha</Text>
                     </View>
 
-
-                    <Button
-                        labelStyle={{ color: '#000' }}
-                        style={{ backgroundColor: useTheme().colors.primary, borderRadius: 15 }}
+                    <AppButton
                         onPress={handleSubmit(signIn)}
-                    >Entrar</Button>
+                        title='Entrar'
+                    />
+
 
                     <View style={styles.containerDontHaveAccount}>
                         <Text style={{ color: '#fff' }} onPress={

@@ -6,7 +6,9 @@ import AquisitionConfigSubscreen from './subscreens/stock-screen/AquisitionConfi
 import { useTheme } from 'react-native-paper';
 import AquisitionFixedIncomeSubscreen from './subscreens/stock-screen/AquisitionFixedIncomeSubscreen';
 import { createStackNavigator } from '@react-navigation/stack';
-import AquisitionVariableIncomeSubscreen from './subscreens/stock-screen/AquisitionVariableIncomeSubscreen';
+import Toast from 'react-native-toast-message';
+import NewVariableIncomeSubscreen from './subscreens/stock-screen/variable-income/NewVariableIncomeSubscreen';
+import AlterVariableIncomeSubscreen from './subscreens/stock-screen/variable-income/AlterVariableIncomeSubscreen';
 
 const Stack = createStackNavigator();
 
@@ -61,8 +63,12 @@ export default props => {
             />
 
             <Stack.Screen
-                name="AquisitionVariableIncomeSubscreen"
-                component={AquisitionVariableIncomeSubscreen}
+                name="NewVariableIncomeSubscreen"
+                component={NewVariableIncomeSubscreen}
+            />
+            <Stack.Screen
+                name="AlterVariableIncomeSubscreen"
+                component={AlterVariableIncomeSubscreen}
             />
 
 

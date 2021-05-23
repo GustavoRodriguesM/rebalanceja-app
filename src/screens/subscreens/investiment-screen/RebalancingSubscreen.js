@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import { Dimensions, Keyboard, Text, View, ScrollView } from 'react-native'
-import { Appbar, Button, TextInput, useTheme } from 'react-native-paper';
+import { Appbar, TextInput, useTheme } from 'react-native-paper';
 import { RebalancingService } from '../../../services/RebalancingService';
 import { AuthService } from '../../../services/AuthService';
+import { convertCurrency } from '../../../services/CommonService';
+import { AdMobInterstitial } from 'expo-ads-admob'
 import AquisitionSupportComponent from '../../../components/investment-components/AquisitionSupportComponent';
-import SnackBar from 'react-native-snackbar-component'
+import Toast from 'react-native-toast-message';
+import { getInterstitialId } from '../../../services/AdMobService'
+import AppButton from '../../../components/utils-components/AppButton';
+
+AdMobInterstitial.setAdUnitID(getInterstitialId())
 
 export default props => {
 
     const [aquisitionsSupports, setAquisitionsSupports] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-    const [financialSupport, setFinancialSupport] = useState("0")
-    const [showSnackbar, setShowSnackbar] = useState(false)
+    const [financialSupport, setFinancialSupport] = useState("")
+    const [canUpdateFinancialSupport, setCanUpdateFinancialSupport] = useState(false)
 
     useEffect(() => {
         async function fetchMyAPI() {
@@ -20,38 +26,40 @@ export default props => {
                 if (!hasTokenValid) {
                     await new AuthService().loginViaRefreshToken();
                 }
-                if (financialSupport > 0) {
-                    await rebalanceStocks();
-                }
             });
-
-
         }
         fetchMyAPI()
     }, []);
 
     useEffect(() => {
-        async function dismissSnackbar() {
-            if (showSnackbar) {
-                setTimeout(
-                    () => {
-                        setShowSnackbar(false)
-                    },
-                    3000)
+        async function updateFinancialSupport() {
+            if (financialSupport > 0 && canUpdateFinancialSupport) {
+                await rebalanceStocks();
             }
         }
-        dismissSnackbar()
-    }, [showSnackbar]);
+        updateFinancialSupport()
+        setCanUpdateFinancialSupport(false);
 
+    }, [canUpdateFinancialSupport])
 
     const rebalanceStocks = async () => {
         setIsLoading(true)
+
+        await AdMobInterstitial.requestAdAsync()
+        await AdMobInterstitial.showAdAsync()
         Keyboard.dismiss()
+
         let responseList = await new RebalancingService().rebalance(financialSupport);
         setAquisitionsSupports(responseList)
 
+
         if (responseList === 'undefined' || responseList.length === 0) {
-            setShowSnackbar(true)
+            Toast.show({
+                type: 'error',
+                position: 'bottom',
+                text1: 'Ops!',
+                text2: 'Não é necessária nenhuma compra por enquanto!'
+            });
         }
         setIsLoading(false)
     }
@@ -65,6 +73,8 @@ export default props => {
         } else {
             setFinancialSupport((Number(financialSupport) + Number(buyValue)).toFixed(2));
         }
+
+        setCanUpdateFinancialSupport(true);
     }
 
     const renderItemAquisition = () => {
@@ -91,33 +101,34 @@ export default props => {
 
     return (
         <>
-            <SnackBar visible={showSnackbar} textMessage="Nenhum aporte necessário por enquanto!" actionHandler={() => { setShowSnackbar(false) }} actionText="Fechar" />
             <View style={useTheme().styles.defaultBackgroundWithFlex}>
+                <Appbar.Header>
+                    <Appbar.Content
+                        title={"Rebalanceamento"}
+                        style={[{ alignItems: 'center' }, useTheme().styles.textStyle]} />
+                </Appbar.Header>
                 <ScrollView>
-                    <Appbar.Header>
-                        <Appbar.Content title={"Rebalanceamento"} style={{ alignItems: 'center' }} />
-                    </Appbar.Header>
-                    <Text style={{
+
+                    <Text style={[{
                         marginLeft: Dimensions.get("screen").width * 0.05,
                         marginTop: Dimensions.get("screen").width * 0.05,
                         fontSize: 16,
                         color: useTheme().colors.text
-                    }}>Rebalanceamento de ativos</Text>
+                    }, useTheme().styles.textStyle]}>Rebalanceamento de ativos</Text>
                     <View style={{ margin: Dimensions.get("screen").width * 0.05 }}>
                         <TextInput
                             label="Aporte"
                             mode="flat"
                             keyboardType='decimal-pad'
-                            value={financialSupport.toString()}
+                            value={convertCurrency(financialSupport)}
                             style={{ backgroundColor: useTheme().colors.textInputBackground, marginBottom: 10 }}
                             theme={{ colors: { text: useTheme().colors.text, placeholder: useTheme().colors.text, primary: useTheme().colors.text } }}
-                            onChangeText={financialSupport => setFinancialSupport(financialSupport)} />
-                        <Button mode="contained"
-                            loading={isLoading}
-                            style={{ backgroundColor: useTheme().colors.primary }}
-                            onPress={rebalanceStocks}>
-                            Calcular aportes
-                        </Button>
+                            onChangeText={financialSupport => setFinancialSupport(convertCurrency(financialSupport))} />
+                        <AppButton
+                            isLoading={isLoading}
+                            onPress={rebalanceStocks}
+                            title="Calcular aportes"
+                        />
                     </View>
                     <View>
                         {renderItemAquisition()}

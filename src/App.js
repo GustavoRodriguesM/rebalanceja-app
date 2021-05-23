@@ -1,6 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
-import React, { Component } from 'react';
-import { Platform, SafeAreaView, StatusBar } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, Platform, SafeAreaView, StatusBar } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack'
 import Tabs from './navigation/Tabs';
 import { Provider as PaperProvider } from 'react-native-paper';
@@ -10,14 +10,50 @@ import SignUpScreen from './screens/SignUpScreen';
 import InitialParamsScreen from './screens/InitialParamsScreen';
 import RebalanceJaTheme from './utils/rebalanceJaTheme'
 import AuthScreen from './screens/AuthScreen';
-
-
+import Toast, { BaseToast } from 'react-native-toast-message';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
+import InternetConnectionAlert from "react-native-internet-connection-alert";
 
 const Stack = createStackNavigator();
 
-export default class App extends Component {
+const toastConfig = {
+  success: ({ text1, text2, ...rest }) => (
+    <BaseToast
+      {...rest}
+      text1Style={{
+        color: RebalanceJaTheme.colors.primary,
+      }}
+      text2Style={{
+        fontSize: 11,
+      }}
+      trailingIcon={null}
+      style={{ backgroundColor: RebalanceJaTheme.colors.modalBackground }}
+      contentContainerStyle={{ backgroundColor: RebalanceJaTheme.colors.modalBackground, marginLeft: Dimensions.get('screen').width * 0.1 }}
+      text1={text1}
+      text2={text2}
+    />
+  ),
+  error: ({ text1, text2, ...rest }) => (
+    <BaseToast
+      {...rest}
+      text1Style={{ color: RebalanceJaTheme.colors.error }}
+      text2Style={{
+        fontSize: 11,
+      }}
+      trailingIcon={null}
+      style={{ backgroundColor: RebalanceJaTheme.colors.modalBackground }}
+      contentContainerStyle={{ backgroundColor: RebalanceJaTheme.colors.modalBackground, marginLeft: Dimensions.get('screen').width * 0.1 }}
+      text1={text1}
+      text2={text2}
+    />
+  ),
+};
 
-  componentDidMount() {
+export default props => {
+
+  const [notification, setNotification] = useState();
+
+  useEffect(() => {
     LogBox.ignoreAllLogs();
     Font.loadAsync({
       //'Montserrat-Regular': require('../assets/fonts/Montserrat/Montserrat-Regular.ttf'),
@@ -25,15 +61,23 @@ export default class App extends Component {
       'Inter-Regular': require('../assets/fonts/Inter/Inter-Regular.ttf'),
       'Inter-Bold': require('../assets/fonts/Inter/Inter-Bold.ttf'),
     });
-  }
+  }, [])
 
-  render() {
-    return (
-      <PaperProvider theme={RebalanceJaTheme}>
-        
+  return (
+    <PaperProvider theme={RebalanceJaTheme}>
+      <InternetConnectionAlert
+        title={"Opa!"}
+        message={"Parece que você está sem internet. O app pode apresentar problemas."}
+        onChange={(connectionState) => {
+          console.log("Connection State: ", connectionState);
+        }}
+      >
+        <SafeAreaView style={{
+          flex: 0, //backgroundColor: RebalanceJaTheme.colors.viewBackground ,
+          paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        }} />
         <SafeAreaView style={{
           flex: 1,
-          paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
         }}>
           <NavigationContainer>
             <Stack.Navigator
@@ -48,7 +92,9 @@ export default class App extends Component {
             </Stack.Navigator>
           </NavigationContainer>
         </SafeAreaView>
-      </PaperProvider>
-    )
-  }
+
+        <Toast config={toastConfig} ref={(ref) => Toast.setRef(ref)} />
+      </InternetConnectionAlert>
+    </PaperProvider>
+  )
 }
