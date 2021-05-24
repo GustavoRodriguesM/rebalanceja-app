@@ -42,13 +42,14 @@ export default props => {
 
     }, [canUpdateFinancialSupport])
 
-    const rebalanceStocks = async () => {
+    const rebalanceStocks = async (showAd = false) => {
         setIsLoading(true)
 
-        await AdMobInterstitial.requestAdAsync()
-        await AdMobInterstitial.showAdAsync()
+        if (showAd) {
+            await AdMobInterstitial.requestAdAsync()
+            await AdMobInterstitial.showAdAsync()
+        }
         Keyboard.dismiss()
-
         let responseList = await new RebalancingService().rebalance(financialSupport);
         setAquisitionsSupports(responseList)
 
@@ -65,13 +66,20 @@ export default props => {
     }
 
     const onRegister = async (buyValue, isBuyOperation) => {
+        let financialSupportNumber = 0;
+        if (financialSupport.includes(',')) {
+            financialSupportNumber = financialSupport.replace('.', '').replace(',', '.')
+        } else {
+            financialSupportNumber = financialSupport
+        }
+
         if (isBuyOperation) {
-            if (Number(financialSupport) - buyValue <= 0)
+            if (Number(financialSupportNumber) - buyValue <= 0)
                 setFinancialSupport("0");
             else
-                setFinancialSupport((Number(financialSupport) - buyValue).toFixed(2));
+                setFinancialSupport((Number(financialSupportNumber) - buyValue).toFixed(2));
         } else {
-            setFinancialSupport((Number(financialSupport) + Number(buyValue)).toFixed(2));
+            setFinancialSupport((Number(financialSupportNumber) + Number(buyValue)).toFixed(2));
         }
 
         setCanUpdateFinancialSupport(true);
@@ -126,7 +134,7 @@ export default props => {
                             onChangeText={financialSupport => setFinancialSupport(convertCurrency(financialSupport))} />
                         <AppButton
                             isLoading={isLoading}
-                            onPress={rebalanceStocks}
+                            onPress={() => rebalanceStocks(true)}
                             title="Calcular aportes"
                         />
                     </View>

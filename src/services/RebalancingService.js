@@ -14,13 +14,17 @@ export class RebalancingService {
     async rebalance(financialSupport: string) {
         let accessToken = await this.authService.getAccessToken();
         let responseList = [];
-        console.log(financialSupport)
+
+        if (financialSupport.includes(',')) {
+            financialSupport = financialSupport.replace(".", "").replace(",", ".")
+        }
+
         await axios({
             method: 'post',
             url: this.utilService.getFinancialSupportUrl(),
             headers: { Authorization: 'Bearer ' + accessToken },
             data: {
-                financialSupport: financialSupport.replace(".", "").replace(",", ".")
+                financialSupport: financialSupport
             }
         }).then((response) => {
             responseList = response.data;

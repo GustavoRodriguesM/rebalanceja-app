@@ -5,6 +5,7 @@ import { AquisitionService } from '../../../services/AquisitionService';
 import { AuthService } from '../../../services/AuthService';
 import BRLCurrencyFormat from '../../../utils/BRLCurrencyFormat';
 import { Appbar, Button, Dialog, HelperText, Paragraph, Portal, TextInput, withTheme } from 'react-native-paper';
+import AppButton from '../../../components/utils-components/AppButton';
 
 
 class FinancialSupportSubscreen extends Component {
@@ -108,7 +109,6 @@ class FinancialSupportSubscreen extends Component {
         };
         await this.aquisitionService.updateQuantity(this, data);
 
-        //console.log(this.props.route);
         this.props.route.params.onRegister(this.state.buyValue, this.state.isBuyOperation);
         this.props.navigation.goBack();
     }
@@ -215,7 +215,7 @@ class FinancialSupportSubscreen extends Component {
                     borderTopRightRadius: 50,
                     borderTopLeftRadius: 50
                 }}>
-                    <View style={{ margin: Dimensions.get('screen').height * 0.02, alignItems: "center"}}>
+                    <View style={{ margin: Dimensions.get('screen').height * 0.02, alignItems: "center" }}>
                         <View style={{ alignItems: "center", }}>
                             <HelperText
                                 type="info"
@@ -269,15 +269,13 @@ class FinancialSupportSubscreen extends Component {
                                 />
                             </View>}
                     </View>
-                    <Button
-                        icon="content-save"
-                        mode="contained"
-                        onPress={() => { this.showConfirmDialog() }}
-                        style={{
-                            backgroundColor: this.props.theme.colors.primary, borderRadius: 100, margin: Dimensions.get('screen').width * 0.05,
-                        }}>
-                        Cadastrar
-                        </Button>
+
+                    <View style={{ alignItems: 'center' }}>
+                        <View style={{ width: '50%' }}><AppButton
+                            onPress={() => { this.showConfirmDialog() }}
+                            title='Cadastrar'
+                        /></View>
+                    </View>
                 </View>
             </View>
         )
