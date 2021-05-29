@@ -1,8 +1,9 @@
+import Constants from 'expo-constants'
+
 export class UtilService {
 
     getServerHost = () => {
-        return "http://192.168.1.67:9000";
-        //return "https://still-mesa-03512.herokuapp.com";
+        return !__DEV__ ? "https://still-mesa-03512.herokuapp.com" : "http://192.168.1.67:9000";
     }
 
     getPermitAddAquisitionUrl = () => {

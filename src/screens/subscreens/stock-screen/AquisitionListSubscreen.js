@@ -1,22 +1,26 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList } from 'react-native'
-import { useTheme } from 'react-native-paper'
+import { FlatList, View } from 'react-native'
+import { ActivityIndicator, Title, useTheme } from 'react-native-paper'
 import { WalletService } from '../../../services/WalletService'
 import { AquisitionService } from '../../../services/AquisitionService'
 import CardStockComponent from '../../../components/stocks-components/CardStockComponent'
 import Toast from 'react-native-toast-message';
+import rebalanceJaTheme from '../../../utils/rebalanceJaTheme'
 
 
 export default (props) => {
 
     const [activeWallet, setActiveWallet] = useState()
     const [aquisitions, setAquisitions] = useState()
+    const [loading, setLoading] = useState(false)
 
     const fetchMyAPI = async () => {
+        setLoading(true)
         let walletLocal = await new WalletService().getActiveWallet();
         let walletStocks = await new WalletService().getAquisitionsByWalletAndCategory(walletLocal.idWallet, props.route.params.idCategory);
         setActiveWallet(walletLocal)
         setAquisitions(walletStocks)
+        setLoading(false)
     }
 
     useEffect(() => {
@@ -85,16 +89,28 @@ export default (props) => {
 
     }
 
+
     return (
+
         <>
-            <FlatList
-                style={{
-                    backgroundColor: useTheme().colors.viewBackground
-                }}
-                data={aquisitions}
-                renderItem={renderItemAquisition}
-                keyExtractor={item => item.idAquisition.toString()}
-            />
+            { loading &&
+                <View style={{ backgroundColor: rebalanceJaTheme.colors.viewBackground, flex: 1, justifyContent: 'center' }}>
+                    <ActivityIndicator
+                        animating={true}
+                        size='large'
+                        color={rebalanceJaTheme.colors.primary} />
+                </View>
+            }
+            { !loading &&
+                <FlatList
+                    style={{
+                        backgroundColor: rebalanceJaTheme.colors.viewBackground
+                    }}
+                    data={aquisitions}
+                    renderItem={renderItemAquisition}
+                    keyExtractor={item => item.idAquisition.toString()}
+                />
+            }
         </>
     )
 }

@@ -13,6 +13,7 @@ import AuthScreen from './screens/AuthScreen';
 import Toast, { BaseToast } from 'react-native-toast-message';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
 import InternetConnectionAlert from "react-native-internet-connection-alert";
+import { AuthService } from './services/AuthService';
 
 const Stack = createStackNavigator();
 
