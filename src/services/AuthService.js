@@ -9,7 +9,6 @@ export class AuthService {
         this.utilService = new UtilService();
         this.ACCESS_TOKEN = 'access_token';
         this.ACCESS_TOKEN_EXP = 'access_token_expiration';
-        this.REFRESH_TOKEN = 'refresh_token';
         this.NAME = 'name';
     }
 
@@ -17,16 +16,11 @@ export class AuthService {
         let self = this;
         let success = 0;
         try {
-            var bodyFormData = new FormData();
-            bodyFormData.append('grant_type', 'password');
-            bodyFormData.append('username', loginData.username);
-            bodyFormData.append('password', loginData.password);
 
             await axios({
                 method: "post",
                 url: self.utilService.getLoginUrl(),
-                data: bodyFormData,
-                headers: self.getBasicAuthorization()
+                data: loginData,
             })
                 .then(function (response) {
                     self.saveToken(response);
@@ -68,7 +62,6 @@ export class AuthService {
         await AsyncStorage.removeItem(this.ACCESS_TOKEN);
         await AsyncStorage.removeItem(this.ACCESS_TOKEN_EXP);
         await AsyncStorage.removeItem(this.NAME);
-        await AsyncStorage.removeItem(this.REFRESH_TOKEN);
     }
 
     async logout() {
@@ -87,13 +80,8 @@ export class AuthService {
         return await AsyncStorage.getItem(this.ACCESS_TOKEN_EXP);
     }
 
-    async getRefreshToken() {
-        return await AsyncStorage.getItem(this.REFRESH_TOKEN);
-    }
-
     hasTokenValid = async () => {
         let accessToken = await this.getAccessToken();
-        //let accessTokenExp = await this.getAccessTokenExp();
         let valid = false;
         await axios({
             method: 'get',
@@ -107,44 +95,10 @@ export class AuthService {
         return valid;
     }
 
-    loginViaRefreshToken = async () => {
-        let self = this;
-        let refreshToken = await this.getRefreshToken();
-        let utilService = new UtilService();
-        if (refreshToken) {
-            try {
-                var bodyFormData = new FormData();
-                bodyFormData.append('grant_type', 'refresh_token');
-                bodyFormData.append('refresh_token', refreshToken);
-    
-                axios({
-                    method: "post",
-                    url: utilService.getLoginUrl(),
-                    data: bodyFormData,
-                    headers: { "Authorization": "Basic d2ViOjEyMw==" }
-                })
-                    .then(function (response) {
-                        self.saveToken(response);
-                    })
-                    .catch(function (response) {
-                        //console.log(response);
-                        console.log(response.response)
-                    });
-            } catch (e) {
-                console.log(e);
-            }
-        }
-    }
-
-    getBasicAuthorization = () => {
-        return { "Authorization": "Basic d2ViOjEyMw==" }
-    }
-
     saveToken = (response) => {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
-        AsyncStorage.setItem(this.REFRESH_TOKEN, response.data.refresh_token);
-        AsyncStorage.setItem(this.ACCESS_TOKEN_EXP, JSON.stringify(response.data.exp));
-        AsyncStorage.setItem(this.ACCESS_TOKEN, response.data.access_token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.accessToken}`;
+        AsyncStorage.setItem(this.ACCESS_TOKEN_EXP, JSON.stringify(response.data.expirationDate));
+        AsyncStorage.setItem(this.ACCESS_TOKEN, response.data.accessToken);
         AsyncStorage.setItem(this.NAME, response.data.name);
     }
 

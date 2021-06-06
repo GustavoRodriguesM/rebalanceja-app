@@ -3,7 +3,20 @@ import Constants from 'expo-constants'
 export class UtilService {
 
     getServerHost = () => {
-        return !__DEV__ ? "https://still-mesa-03512.herokuapp.com" : "http://192.168.1.67:9000";
+        //return !__DEV__ ? "https://still-mesa-03512.herokuapp.com" : "http://192.168.1.67:9000";
+        return !__DEV__ ? "https://still-mesa-03512.herokuapp.com" : "http://192.168.1.67:3000";
+    }
+
+    getCheckTokenUrl = (token) => {
+        return this.getServerHost().concat("/oauth/check_token?token=").concat(token)
+    }
+
+    getLoginUrl = () => {
+        return this.getServerHost().concat("/auth/login")
+    }
+
+    getRegisterUrl = () => {
+        return this.getServerHost().concat("/auth/register")
     }
 
     getPermitAddAquisitionUrl = () => {
@@ -15,7 +28,7 @@ export class UtilService {
     }
 
     getSearchUserUrl = (searchEmail) => {
-        return this.getServerHost().concat("/users/exists-email/").concat(searchEmail);
+        return this.getServerHost().concat("/users/exists-email/");
     }
 
     getStockBySymbol = (stockSymbol) => {
@@ -31,7 +44,8 @@ export class UtilService {
     }
 
     getAquisitionsByWalletAndCategory = (idWallet, idCategory) => {
-        return this.getServerHost().concat("/wallets/").concat(idWallet).concat("/category/").concat(idCategory);
+        //return this.getServerHost().concat("/wallets/").concat(idWallet).concat("/category/").concat(idCategory);
+        return this.getServerHost().concat("/aquisitions/find-by-active-user/category/").concat(idCategory);
     }
 
     getAquisitionsByWallet = (idWallet) => {
@@ -51,7 +65,7 @@ export class UtilService {
     }
 
     getCreateFirstWalletUrl = () => {
-        return this.getServerHost().concat("/wallets/first")
+        return this.getServerHost().concat("/wallets")
     }
 
     getWalletPutUrl = (idWallet) => {
@@ -77,20 +91,8 @@ export class UtilService {
         return this.getServerHost().concat("/wallets/user/active")
     }
 
-    getCheckTokenUrl = (token) => {
-        return this.getServerHost().concat("/oauth/check_token?token=").concat(token)
-    }
-
-    getLoginUrl = () => {
-        return this.getServerHost().concat("/oauth/token")
-    }
-
-    getRegisterUrl = () => {
-        return this.getServerHost().concat("/auth/register")
-    }
-
     getGeneralDataUrl = () => {
-        return this.getServerHost().concat("/general/data/")
+        return this.getServerHost().concat("/wallets/dashboard")
     }
 
     getFinancialSupportUrl = () => {

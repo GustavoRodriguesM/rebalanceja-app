@@ -63,7 +63,8 @@ export default props => {
         if (getIdealPercentsSum() == 100) {
             let dataObj = {
                 description: description,
-                idealPercents: idealPercents
+                idealPercents: idealPercents,
+                active: true,
             }
             await new WalletService().createFirstWallet(dataObj);
             Keyboard.dismiss()

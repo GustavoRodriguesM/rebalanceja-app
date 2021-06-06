@@ -18,11 +18,6 @@ class WalletSubscreen extends Component {
   }
   async componentDidMount() {
     this.props.navigation.addListener('focus', async () => {
-      let hasTokenValid = await this.authService.hasTokenValid();
-      if (!hasTokenValid) {
-        await this.authService.loginViaRefreshToken();
-      }
-
       this.getAllWallets();
     });
 

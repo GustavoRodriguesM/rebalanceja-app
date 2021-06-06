@@ -9,9 +9,13 @@ export class UserService {
 
     async existsEmail(searchEmail) {
         let exists = false;
+        const data = {
+            email: searchEmail
+        }
         await axios({
-            method: 'get',
+            method: 'post',
             url: this.utilService.getSearchUserUrl(searchEmail),
+            data: data
         }).then((response) => {
             exists = true;
         }).catch((response) => {

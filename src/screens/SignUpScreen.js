@@ -4,8 +4,6 @@ import { ActivityIndicator, Button, Subheading, Text, Title, withTheme } from "r
 import UserDataComponent from "../components/signup-components/UserDataComponent";
 import ProgressSteps from "../components/stepper-components/ProgressSteps";
 import ProgressStep from "../components/stepper-components/ProgressStep";
-import SelectPlanComponent from "../components/signup-components/SelectPlanComponent";
-import PaymentRegisterComponent from "../components/signup-components/PaymentRegisterComponent";
 import { SignUpService } from "../services/SignUpService";
 
 
@@ -22,25 +20,8 @@ class SignUpScreen extends Component {
                 birthday: ""
             },
             isLoading: false,
-            isConfirmed: false,
-            stepNumber: 1,
+            isConfirmed: false
         }
-    }
-
-
-    onGoToSelectPlan = () => {
-        let stepNumberNew = this.state.stepNumber + 1;
-        this.setState({ stepNumber: stepNumberNew });
-    }
-
-    chooseSubscriptionPlan = () => {
-        let stepNumberNew = this.state.stepNumber + 1;
-        this.setState({ stepNumber: stepNumberNew });
-    }
-
-    onGoBack() {
-        let stepNumberNew = this.state.stepNumber - 1;
-        this.setState({ stepNumber: stepNumberNew });
     }
 
     onGoToSignIn = () => {

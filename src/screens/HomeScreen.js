@@ -25,11 +25,6 @@ export default props => {
 
     useEffect(() => {
         props.navigation.addListener('focus', async () => {
-            let hasTokenValid = await new AuthService().hasTokenValid();
-
-            if (!hasTokenValid) {
-                await new AuthService().loginViaRefreshToken();
-            }
             getInitialParams();
         });
     }, [])
@@ -37,7 +32,8 @@ export default props => {
 
     const getInitialParams = async () => {
         let generalData = await new GeneralDataService().getGeneralData();
-        if (generalData.aquisitionsLength === 0) {
+        console.log(generalData);
+        if (generalData.aquisitionsSize === 0) {
             props.navigation.navigate('StockScreen');
         }
         if (generalData === 204) {
@@ -105,7 +101,7 @@ export default props => {
 
                 <WelcomeComponent name={name} />
                 <GeneralInvestComponent
-                    walletDescription={user.walletDescription}
+                    walletDescription={user.wallet?.description}
                     totalInvestments={user.sumAllStocks}
                 />
 

@@ -11,17 +11,6 @@ const Stack = createStackNavigator();
 //TODO: Alterar fontes
 export default props => {
 
-    useEffect(() => {
-        props.navigation.addListener('focus', async () => {
-            let hasTokenValid = await new AuthService().hasTokenValid();
-            if (!hasTokenValid) {
-                await new AuthService().loginViaRefreshToken();
-            }
-
-        });
-    }, [])
-
-
     return (
         <Stack.Navigator
             initialRouteName="ProfileSubscreen"

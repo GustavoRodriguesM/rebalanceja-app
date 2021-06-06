@@ -97,7 +97,7 @@ export class WalletService {
             headers: {Authorization: 'Bearer ' + accessToken },
             data: data
         }).then((response) => {
-            AsyncStorage.setItem("firstWallet", JSON.stringify(response.data));
+            console.log(response.data);
         }).catch((response) => {
             //console.log(response.response)
             console.log(response.response);
