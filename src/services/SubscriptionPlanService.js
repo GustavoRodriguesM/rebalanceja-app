@@ -4,25 +4,25 @@ import { AuthService } from "./AuthService";
 import { UtilService } from "./UtilService";
 
 export class SubscriptionPlanService {
+  constructor() {
+    this.utilService = new UtilService();
+    this.authService = new AuthService();
+  }
 
-    constructor() {
-        this.utilService = new UtilService();
-        this.authService = new AuthService();
-    }
+  async getAvailableSubscriptionPlans() {
+    let objs = [];
+    await axios({
+      method: "get",
+      url: this.utilService.getAvailableSubscriptionPlans(),
+    })
+      .then((response) => {
+        objs = response.data;
+      })
+      .catch((response) => {
+        //console.log(response.response)
+        console.log("Falha ao chamar: getAvailableSubscriptionPlans()");
+      });
 
-    async getAvailableSubscriptionPlans() {
-        let objs = []
-        await axios({
-            method: 'get',
-            url: this.utilService.getAvailableSubscriptionPlans(),
-        }).then((response) => {
-            objs = response.data;
-        }).catch((response) => {
-            //console.log(response.response)
-            console.log("Falha ao chamar: getAvailableSubscriptionPlans()");
-        });
-
-        return objs;
-    }
-
+    return objs;
+  }
 }

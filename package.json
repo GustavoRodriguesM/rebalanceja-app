@@ -19,9 +19,12 @@
     "@react-navigation/native": "^5.9.3",
     "@react-navigation/stack": "^5.14.3",
     "axios": "^0.21.1",
-    "eslint": "^7.25.0",
+    "eslint": "^7.28.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-react": "^7.24.0",
     "expo": "~40.0.0",
     "expo-ads-admob": "^8.4.0",
+    "expo-app-loading": "^1.0.3",
     "expo-constants": "~9.3.3",
     "expo-font": "~8.4.0",
     "expo-notifications": "~0.8.2",
@@ -51,7 +54,10 @@
     "react-navigation": "^4.4.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0"
+    "@babel/core": "^7.9.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "prettier": "^2.3.1"
   },
   "private": true
 }

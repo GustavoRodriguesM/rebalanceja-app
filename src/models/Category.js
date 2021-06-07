@@ -1,10 +1,10 @@
 export class Category {
-    idCategory: Number;
+  idCategory: number;
 
-    description: String;
-    rebalanceType: String;
+  description: string;
+  rebalanceType: string;
 
-    createdAt: String;
-    updatedAt: String;
-    deletedAt: String;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
 }

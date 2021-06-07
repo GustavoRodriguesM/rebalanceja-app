@@ -1,21 +1,21 @@
 import { Category } from "./Category";
 
 export class Stock {
-    symbolOriginal: String;
+  symbolOriginal: string;
 
-    symbol: String;
-    shortName: String;
-    longName: String;
-    type: String;
-    region: String;
-    currency: String;
+  symbol: string;
+  shortName: string;
+  longName: string;
+  type: string;
+  region: string;
+  currency: string;
 
-    price: number;
-    priceInBRL: number;
+  price: number;
+  priceInBRL: number;
 
-    category: Category;
+  category: Category;
 
-    createdAt: String;
-    updatedAt: String;
-    deletedAt: String;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
 }

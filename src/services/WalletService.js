@@ -4,107 +4,119 @@ import { AuthService } from "./AuthService";
 import { UtilService } from "./UtilService";
 
 export class WalletService {
+  constructor() {
+    this.utilService = new UtilService();
+    this.authService = new AuthService();
+  }
 
-    constructor() {
-        this.utilService = new UtilService();
-        this.authService = new AuthService();
-    }
+  async getAllWallets() {
+    let accessToken = await this.authService.getAccessToken();
+    let wallets = [];
+    await axios({
+      method: "get",
+      url: this.utilService.getAllWallets(),
+      headers: { Authorization: "Bearer " + accessToken },
+    })
+      .then((response) => {
+        wallets = response.data;
+      })
+      .catch((response) => {
+        console.log("Falha ao chamar: getAllWallets()");
+      });
 
-    async getAllWallets() {
-        let accessToken = await this.authService.getAccessToken();
-        let wallets = [];
-        await axios({
-            method: 'get',
-            url: this.utilService.getAllWallets(),
-            headers: {Authorization: 'Bearer ' + accessToken }
-        }).then((response) => {
-            wallets = response.data;
-        }).catch((response) => {
-            console.log("Falha ao chamar: getAllWallets()");
-        });
+    return wallets;
+  }
 
-        return wallets;
-    }
+  async updateWallet(idWallet, dataObj) {
+    let accessToken = await this.authService.getAccessToken();
+    await axios({
+      method: "put",
+      url: this.utilService.getWalletPutUrl(idWallet),
+      headers: { Authorization: "Bearer " + accessToken },
+      data: dataObj,
+    })
+      .then((response) => {})
+      .catch((response) => {
+        console.log(response.response);
+        console.log("Falha ao chamar: getAllWallets()");
+      });
+  }
 
-    async updateWallet(idWallet, dataObj) {
-        let accessToken = await this.authService.getAccessToken();
-        await axios({
-            method: 'put',
-            url: this.utilService.getWalletPutUrl(idWallet),
-            headers: {Authorization: 'Bearer ' + accessToken },
-            data: dataObj
-        }).then((response) => {
-        }).catch((response) => {
-            console.log(response.response)
-            console.log("Falha ao chamar: getAllWallets()");
-        });
-    }
+  async getAquisitionsByWalletAndCategory(idWallet, idCategory) {
+    let accessToken = await this.authService.getAccessToken();
+    let aquisitions = [];
+    await axios({
+      method: "get",
+      url: this.utilService.getAquisitionsByWalletAndCategory(
+        idWallet,
+        idCategory
+      ),
+      headers: { Authorization: "Bearer " + accessToken },
+    })
+      .then((response) => {
+        aquisitions = response.data;
+      })
+      .catch((response) => {
+        console.log(response.response);
+        console.log("Falha ao chamar: getAquisitionsByWalletAndCategory()");
+      });
 
-    async getAquisitionsByWalletAndCategory(idWallet, idCategory) {
-        let accessToken = await this.authService.getAccessToken();
-        let aquisitions = [];
-        await axios({
-            method: 'get',
-            url: this.utilService.getAquisitionsByWalletAndCategory(idWallet, idCategory),
-            headers: {Authorization: 'Bearer ' + accessToken }
-        }).then((response) => {
-            aquisitions = response.data;
-        }).catch((response) => {
-            console.log(response.response)
-            console.log("Falha ao chamar: getAquisitionsByWalletAndCategory()");
-        });
+    return aquisitions;
+  }
 
-        return aquisitions;
-    }
+  async getAquisitionsByWallet(idWallet) {
+    let accessToken = await this.authService.getAccessToken();
+    let aquisitions = [];
+    await axios({
+      method: "get",
+      url: this.utilService.getAquisitionsByWallet(idWallet),
+      headers: { Authorization: "Bearer " + accessToken },
+    })
+      .then((response) => {
+        aquisitions = response.data.aquisitions;
+      })
+      .catch((response) => {
+        console.log(response.response);
+        console.log("Falha ao chamar: getAquisitionsByWallet()");
+      });
 
-    async getAquisitionsByWallet(idWallet) {
-        let accessToken = await this.authService.getAccessToken();
-        let aquisitions = [];
-        await axios({
-            method: 'get',
-            url: this.utilService.getAquisitionsByWallet(idWallet),
-            headers: {Authorization: 'Bearer ' + accessToken }
-        }).then((response) => {
-            aquisitions = response.data.aquisitions;
-        }).catch((response) => {
-            console.log(response.response)
-            console.log("Falha ao chamar: getAquisitionsByWallet()");
-        });
+    return aquisitions;
+  }
 
-        return aquisitions;
-    }
+  async getActiveWallet() {
+    let accessToken = await this.authService.getAccessToken();
+    let wallet = [];
+    await axios({
+      method: "get",
+      url: this.utilService.getActiveWallet(),
+      headers: { Authorization: "Bearer " + accessToken },
+    })
+      .then((response) => {
+        wallet = response.data;
+      })
+      .catch((response) => {
+        console.log(response.response);
+        console.log("Falha ao chamar: getActiveWallet()");
+      });
 
-    async getActiveWallet() {
-        let accessToken = await this.authService.getAccessToken();
-        let wallet = [];
-        await axios({
-            method: 'get',
-            url: this.utilService.getActiveWallet(),
-            headers: {Authorization: 'Bearer ' + accessToken }
-        }).then((response) => {
-            wallet = response.data;
-        }).catch((response) => {
-            console.log(response.response)
-            console.log("Falha ao chamar: getActiveWallet()");
-        });
+    return wallet;
+  }
 
-        return wallet;
-    }
-
-    async createFirstWallet(data) {
-        let accessToken = await this.authService.getAccessToken();
-        await axios({
-            method: 'post',
-            url: this.utilService.getCreateFirstWalletUrl(),
-            headers: {Authorization: 'Bearer ' + accessToken },
-            data: data
-        }).then((response) => {
-            AsyncStorage.setItem("firstWallet", JSON.stringify(response.data));
-        }).catch((response) => {
-            //console.log(response.response)
-            console.log(response.response);
-            console.log("Falha ao chamar: createFirstWallet()");
-        });
-    }
-
+  async createFirstWallet(data) {
+    let accessToken = await this.authService.getAccessToken();
+    await axios({
+      method: "post",
+      url: this.utilService.getCreateFirstWalletUrl(),
+      headers: { Authorization: "Bearer " + accessToken },
+      data: data,
+    })
+      .then((response) => {
+        AsyncStorage.setItem("firstWallet", JSON.stringify(response.data));
+      })
+      .catch((response) => {
+        //console.log(response.response)
+        console.log(response.response);
+        console.log("Falha ao chamar: createFirstWallet()");
+      });
+  }
 }
