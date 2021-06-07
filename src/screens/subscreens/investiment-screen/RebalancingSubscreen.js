@@ -20,18 +20,6 @@ export default props => {
     const [canUpdateFinancialSupport, setCanUpdateFinancialSupport] = useState(false)
 
     useEffect(() => {
-        async function fetchMyAPI() {
-            props.navigation.addListener('focus', async () => {
-                let hasTokenValid = await new AuthService().hasTokenValid();
-                if (!hasTokenValid) {
-                    await new AuthService().loginViaRefreshToken();
-                }
-            });
-        }
-        fetchMyAPI()
-    }, []);
-
-    useEffect(() => {
         async function updateFinancialSupport() {
             if (financialSupport > 0 && canUpdateFinancialSupport) {
                 await rebalanceStocks();

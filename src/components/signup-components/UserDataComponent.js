@@ -24,7 +24,6 @@ export default props => {
             phoneNumber: form.phoneForm,
             birthDate: form.birthdateForm
         }
-        console.log(register)
         await new SignUpService().register(register);
         props.onCreateUser();
     }
@@ -125,7 +124,6 @@ export default props => {
                                 maxLength={10}
                                 onChangeText={value => {
                                     var v = value;
-                                    console.log(v)
                                     if (v.length <= 10) {
                                         if (v.match(/^\d{2}$/) !== null) {
                                             value = v + '/';

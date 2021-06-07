@@ -14,6 +14,7 @@ import Toast, { BaseToast } from 'react-native-toast-message';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
 import InternetConnectionAlert from "react-native-internet-connection-alert";
 import { AuthService } from './services/AuthService';
+import { AsyncStorageService } from './services/AsyncStorageService';
 
 const Stack = createStackNavigator();
 
@@ -54,14 +55,18 @@ export default props => {
 
   const [notification, setNotification] = useState();
 
-  useEffect(() => {
-    LogBox.ignoreAllLogs();
-    Font.loadAsync({
+  getFonts = async () => {
+    await Font.loadAsync({
       //'Montserrat-Regular': require('../assets/fonts/Montserrat/Montserrat-Regular.ttf'),
       //'Montserrat-Bold': require('../assets/fonts/Montserrat/Montserrat-Bold.ttf'),
       'Inter-Regular': require('../assets/fonts/Inter/Inter-Regular.ttf'),
       'Inter-Bold': require('../assets/fonts/Inter/Inter-Bold.ttf'),
     });
+  }
+
+  useEffect(() => {
+    LogBox.ignoreAllLogs();
+    getFonts();
   }, [])
 
   return (
@@ -70,7 +75,7 @@ export default props => {
         title={"Opa!"}
         message={"Parece que você está sem internet. O app pode apresentar problemas."}
         onChange={(connectionState) => {
-          console.log("Connection State: ", connectionState);
+          //console.log("Connection State: ", connectionState);
         }}
       >
         <SafeAreaView style={{

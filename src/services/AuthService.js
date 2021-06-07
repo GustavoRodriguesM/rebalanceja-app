@@ -13,6 +13,17 @@ export class AuthService {
         this.NAME = 'name';
     }
 
+    isTokenExpired = async () => {
+        const expirationDate = await this.getAccessTokenExp();
+        const actualDate = new Date().getTime();
+        if(expirationDate < actualDate) {
+            this.logout();
+            return true;
+        }
+
+        return false;
+    }
+
     login = async (loginData) => {
         let self = this;
         let success = 0;
@@ -89,51 +100,6 @@ export class AuthService {
 
     async getRefreshToken() {
         return await AsyncStorage.getItem(this.REFRESH_TOKEN);
-    }
-
-    hasTokenValid = async () => {
-        let accessToken = await this.getAccessToken();
-        //let accessTokenExp = await this.getAccessTokenExp();
-        let valid = false;
-        await axios({
-            method: 'get',
-            url: this.utilService.getCheckTokenUrl(accessToken),
-        }).then((response) => {
-            valid = true;
-        }).catch((response) => {
-            valid = false;
-        });
-
-        return valid;
-    }
-
-    loginViaRefreshToken = async () => {
-        let self = this;
-        let refreshToken = await this.getRefreshToken();
-        let utilService = new UtilService();
-        if (refreshToken) {
-            try {
-                var bodyFormData = new FormData();
-                bodyFormData.append('grant_type', 'refresh_token');
-                bodyFormData.append('refresh_token', refreshToken);
-    
-                axios({
-                    method: "post",
-                    url: utilService.getLoginUrl(),
-                    data: bodyFormData,
-                    headers: { "Authorization": "Basic d2ViOjEyMw==" }
-                })
-                    .then(function (response) {
-                        self.saveToken(response);
-                    })
-                    .catch(function (response) {
-                        //console.log(response);
-                        console.log(response.response)
-                    });
-            } catch (e) {
-                console.log(e);
-            }
-        }
     }
 
     getBasicAuthorization = () => {

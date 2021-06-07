@@ -4,8 +4,6 @@ import { useTheme } from 'react-native-paper';
 
 export default props => {
 
-    console.log(props.type)
-
     if (props.type === 'undefined' || props.type == null) {
         return <></>;
     }

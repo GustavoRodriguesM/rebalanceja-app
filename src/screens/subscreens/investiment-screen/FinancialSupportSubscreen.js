@@ -25,16 +25,6 @@ class FinancialSupportSubscreen extends Component {
         this.authService = new AuthService();
     }
 
-
-    async componentDidMount() {
-        this.props.navigation.addListener('focus', async () => {
-            let hasTokenValid = await this.authService.hasTokenValid();
-            if (!hasTokenValid) {
-                await this.authService.loginViaRefreshToken();
-            }
-        });
-    }
-
     getStyleButton(button) {
         if (button === "buy") {
             if (this.state.isBuyOperation) {

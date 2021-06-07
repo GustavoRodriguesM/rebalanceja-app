@@ -29,12 +29,6 @@ export default props => {
 
 
     const fetchMyAPI = async () => {
-        let authService = new AuthService();
-        let hasTokenValid = await authService.hasTokenValid();
-        if (!hasTokenValid) {
-            await authService.loginViaRefreshToken();
-        }
-
         let walletLocal = await new WalletService().getActiveWallet();
         setDescription(walletLocal.description)
     }

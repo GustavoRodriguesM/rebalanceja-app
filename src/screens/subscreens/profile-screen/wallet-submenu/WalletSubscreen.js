@@ -1,79 +1,67 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Dimensions, Text, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler';
-import { Appbar, List, withTheme } from 'react-native-paper';
-import { AuthService } from '../../../../services/AuthService';
+import { Appbar, List, useTheme } from 'react-native-paper';
 import { WalletService } from '../../../../services/WalletService';
 import { AsyncStorageService } from '../../../../services/AsyncStorageService';
 
-class WalletSubscreen extends Component {
+export default props => {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      wallets: []
-    }
-    this.authService = new AuthService();
-    this.walletService = new WalletService();
-  }
-  async componentDidMount() {
-    this.props.navigation.addListener('focus', async () => {
-      let hasTokenValid = await this.authService.hasTokenValid();
-      if (!hasTokenValid) {
-        await this.authService.loginViaRefreshToken();
-      }
+  const [wallets, setWallets] = useState([])
+  const [primaryColor, setPrimaryColor] = useState(useTheme().colors.primary)
+  const [textStyle, setTextStyle] = useState(useTheme().styles.textStyle)
 
-      this.getAllWallets();
+    useEffect(() => {
+        props.navigation.addListener('focus', async () => {
+      await getAllWallets();
     });
 
-    this.getAllWallets();
+    getAllWallets();
+    }, []);
+
+
+  const getAllWallets = async () => {
+    let wallets = await new WalletService().getAllWallets();
+    setWallets(wallets);
   }
 
-  getAllWallets = () => {
-    this.walletService.getAllWallets(this);
-  }
-
-  renderItem = ({ index }) => {
+  const renderItemWallet = ({ index }) => {
     return (
       <List.Item
         key={index}
-        titleStyle={this.props.theme.styles.textStyle}
-        descriptionStyle={this.props.theme.styles.textStyle}
-        title={this.state.wallets[index].description}
-        description={this.state.wallets[index].totalStocks + " ativos"}
-        left={props => <List.Icon {...props} icon="finance" color={this.props.theme.colors.primary} />}
-        right={props => <List.Icon {...props} icon="chevron-right" color={this.props.theme.colors.primary} />}
+        titleStyle={textStyle}
+        descriptionStyle={textStyle}
+        title={wallets[index].description}
+        description={wallets[index].totalStocks + " ativos"}
+        left={props => <List.Icon {...props} icon="finance" color={primaryColor} />}
+        right={props => <List.Icon {...props} icon="chevron-right" color={primaryColor} />}
         onPress={() => {
-          new AsyncStorageService().setWalletToAlterConfig(this.state.wallets[index]);
+          new AsyncStorageService().setWalletToAlterConfig(wallets[index]);
 
-          this.props.navigation.navigate('WalletConfigSubscreen', this.state.wallets[index]);
+          props.navigation.navigate('WalletConfigSubscreen', wallets[index]);
         }}
       />
     )
   }
 
-  render() {
-    return (
-      <View style={{
-        backgroundColor: this.props.theme.colors.viewBackground,
-        flex: 1
-      }}>
-        <Appbar.Header>
-          <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
-          <Appbar.Content title={"Carteiras"} style={{ alignItems: 'center' }} />
-        </Appbar.Header>
-        <View>
-          <FlatList
-            style={{ maxHeight: Dimensions.get("screen").height * 0.60 }}
-            data={this.state.wallets}
-            renderItem={this.renderItem}
-            keyExtractor={(item, index) => index.toString()}
-            contentContainerStyle={{ padding: 10 }}
-          />
-        </View>
+  return (
+    <View style={{
+      backgroundColor: useTheme().colors.viewBackground,
+      flex: 1
+    }}>
+      <Appbar.Header>
+        <Appbar.BackAction onPress={() => props.navigation.goBack()} />
+        <Appbar.Content title={"Carteiras"} style={{ alignItems: 'center' }} />
+      </Appbar.Header>
+      <View>
+        <FlatList
+          style={{ maxHeight: Dimensions.get("screen").height * 0.60 }}
+          data={wallets}
+          renderItem={renderItemWallet}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={{ padding: 10 }}
+        />
       </View>
-    )
-  }
+    </View>
+  )
 }
-
-export default withTheme(WalletSubscreen);

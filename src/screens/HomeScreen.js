@@ -6,7 +6,6 @@ import StockListComponent from '../components/home-components/StockListComponent
 import WelcomeComponent from '../components/home-components/WelcomeComponent'
 import { GeneralDataService } from '../services/GeneralDataService'
 import { AuthService } from '../services/AuthService'
-import DailyGeneralDataChart from '../components/home-components/charts/DailyGeneralDataChart'
 import { Paragraph, Title, useTheme } from 'react-native-paper'
 import { PieChart } from 'react-native-chart-kit'
 import RebalanceJaTheme from '../utils/rebalanceJaTheme'
@@ -25,11 +24,6 @@ export default props => {
 
     useEffect(() => {
         props.navigation.addListener('focus', async () => {
-            let hasTokenValid = await new AuthService().hasTokenValid();
-
-            if (!hasTokenValid) {
-                await new AuthService().loginViaRefreshToken();
-            }
             getInitialParams();
         });
     }, [])
@@ -52,8 +46,8 @@ export default props => {
 
     const getGrid = () => {
         let components = [];
-        if (typeof user.generalCategories !== "undefined") {
-            for (let i = 0; i < user.generalCategories.length; i++) {
+        if (typeof user.generalCategories != undefined) {
+            for (let i = 0; i < user.generalCategories?.length; i++) {
                 components.push(
                     <StockGridComponent
                         key={i}
@@ -77,8 +71,8 @@ export default props => {
 
     getDataPieChart = () => {
         let components = [];
-        if (typeof user.generalCategories !== "undefined") {
-            for (let i = 0; i < user.generalCategories.length; i++) {
+        if (typeof user.generalCategories != undefined) {
+            for (let i = 0; i < user.generalCategories?.length; i++) {
 
                 if (user.generalCategories[i].actualPercentual > 0) {
                     components.push({

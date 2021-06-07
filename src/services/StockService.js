@@ -89,11 +89,13 @@ export class StockService {
                     apiResponse = response.data.exists;
                 })
                 .catch(function (response) {
+            console.log("existsInActiveWallet");
                     console.log(response.response);
                     apiResponse = false;
                 });
             return !apiResponse;
         } catch (e) {
+            console.log("existsInActiveWallet");
             console.log(e);
         }
     }

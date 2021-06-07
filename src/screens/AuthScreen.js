@@ -20,8 +20,8 @@ export default props => {
     }, [])
 
     const verifyTokenValid = async () => {
-        let hasTokenValid = await new AuthService().hasTokenValid();
-        if (hasTokenValid) {
+        let isTokenExpired = await new AuthService().isTokenExpired();
+        if (!isTokenExpired) {
             props.navigation.navigate('HomeScreen');
         }
     }

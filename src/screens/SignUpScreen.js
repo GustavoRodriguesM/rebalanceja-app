@@ -4,8 +4,6 @@ import { ActivityIndicator, Button, Subheading, Text, Title, withTheme } from "r
 import UserDataComponent from "../components/signup-components/UserDataComponent";
 import ProgressSteps from "../components/stepper-components/ProgressSteps";
 import ProgressStep from "../components/stepper-components/ProgressStep";
-import SelectPlanComponent from "../components/signup-components/SelectPlanComponent";
-import PaymentRegisterComponent from "../components/signup-components/PaymentRegisterComponent";
 import { SignUpService } from "../services/SignUpService";
 
 
