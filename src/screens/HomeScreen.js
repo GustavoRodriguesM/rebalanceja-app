@@ -13,8 +13,7 @@ import ExpositionCategoriesChart from "../components/home-components/charts/Expo
 import AdPublisher from "../components/ad-components/AdPublisher";
 
 export default (props) => {
-  const [name, setName] = useState("");
-  const [user, setUser] = useState([]);
+  const [dataDashboard, setDataDashboard] = useState([]);
 
   useEffect(() => {
     getInitialParams();
@@ -34,23 +33,21 @@ export default (props) => {
     if (generalData === 204) {
       props.navigation.navigate("InitialParamsScreen");
     } else {
-      setUser(generalData);
+      setDataDashboard(generalData);
     }
-
-    setName(await new AuthService().getName());
   };
 
   const getGrid = () => {
     let components = [];
-    if (typeof user.generalCategories != undefined) {
-      for (let i = 0; i < user.generalCategories?.length; i++) {
+    if (typeof dataDashboard.generalCategories != undefined) {
+      for (let i = 0; i < dataDashboard.generalCategories?.length; i++) {
         components.push(
           <StockGridComponent
             key={i}
-            gridName={user.generalCategories[i].category.description}
-            totalInvestment={user.generalCategories[i].sumStocks}
-            actual={user.generalCategories[i].actualPercentual}
-            objective={user.generalCategories[i].idealPercentual}
+            gridName={dataDashboard.generalCategories[i].category.description}
+            totalInvestment={dataDashboard.generalCategories[i].sumStocks}
+            actual={dataDashboard.generalCategories[i].actualPercentual}
+            objective={dataDashboard.generalCategories[i].idealPercentual}
           />
         );
       }
@@ -74,12 +71,13 @@ export default (props) => {
 
   getDataPieChart = () => {
     let components = [];
-    if (typeof user.generalCategories != undefined) {
-      for (let i = 0; i < user.generalCategories?.length; i++) {
-        if (user.generalCategories[i].actualPercentual > 0) {
+    if (typeof dataDashboard.generalCategories != undefined) {
+      for (let i = 0; i < dataDashboard.generalCategories?.length; i++) {
+        if (dataDashboard.generalCategories[i].actualPercentual > 0) {
           components.push({
-            name: user.generalCategories[i].category.description,
-            actualPercentual: user.generalCategories[i].actualPercentual,
+            name: dataDashboard.generalCategories[i].category.description,
+            actualPercentual:
+              dataDashboard.generalCategories[i].actualPercentual,
             color: getColorPieChart(i),
             legendFontColor: "#fff",
             legendFontSize: 15,
@@ -92,7 +90,7 @@ export default (props) => {
   };
 
   const hasAnyData = () => {
-    return user.sumAllStocks > 0;
+    return dataDashboard.sumAllStocks > 0;
   };
 
   return (
@@ -100,10 +98,10 @@ export default (props) => {
       style={{ backgroundColor: useTheme().colors.viewBackground, flex: 1 }}
     >
       <ScrollView>
-        <WelcomeComponent name={name} />
+        <WelcomeComponent name={await new AuthService().getName()} />
         <GeneralInvestComponent
-          walletDescription={user.walletDescription}
-          totalInvestments={user.sumAllStocks}
+          walletDescription={dataDashboard.wallet.description}
+          totalInvestments={dataDashboard.sumAllStocks}
         />
 
         <StockListComponent>{getGrid()}</StockListComponent>
