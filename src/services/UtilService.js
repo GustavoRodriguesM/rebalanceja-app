@@ -110,7 +110,7 @@ export class UtilService {
   };
 
   getGeneralDataUrl = () => {
-    return this.getServerHost().concat("/dashboard/user-mobile");
+    return this.getServerHost().concat("/general/data/");
   };
 
   getFinancialSupportUrl = () => {
