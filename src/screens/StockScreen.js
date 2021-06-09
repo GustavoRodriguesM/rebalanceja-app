@@ -13,23 +13,6 @@ import AlterVariableIncomeSubscreen from "./subscreens/stock-screen/variable-inc
 const Stack = createStackNavigator();
 
 export default (props) => {
-  const [description, setDescription] = useState("");
-
-  useEffect(() => {
-    fetchMyAPI();
-  }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      fetchMyAPI();
-    }, [])
-  );
-
-  const fetchMyAPI = async () => {
-    let walletLocal = await new WalletService().getActiveWallet();
-    setDescription(walletLocal.description);
-  };
-
   return (
     <Stack.Navigator
       initialRouteName={"AquisitionConfigSubscreen"}

@@ -20,7 +20,7 @@ export default (props) => {
         <Appbar.Content title={"Perfil"} style={{ alignItems: "center" }} />
       </Appbar.Header>
       <ScrollView>
-        <ProfileGroupComponent title="PERFIL">
+        {/*<ProfileGroupComponent title="PERFIL">
           <ProfileItemComponent
             title="Editar perfil"
             description="teste"
@@ -30,7 +30,7 @@ export default (props) => {
             title="Alterar senha"
             onPress={() => console.log("Clicou em alterar senha")}
           />
-        </ProfileGroupComponent>
+  </ProfileGroupComponent>*/}
         <ProfileGroupComponent title="CARTEIRAS">
           <ProfileItemComponent
             title="Visualizar carteiras"

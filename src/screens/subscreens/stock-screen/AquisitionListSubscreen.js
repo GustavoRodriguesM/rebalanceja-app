@@ -15,13 +15,11 @@ export default (props) => {
   const fetchMyAPI = async () => {
     setLoading(true);
     let walletLocal = await new WalletService().getActiveWallet();
-    let walletStocks =
-      await new WalletService().getAquisitionsByWalletAndCategory(
-        walletLocal.idWallet,
-        props.route.params.idCategory
-      );
+    const aquisitions = walletLocal.aquisitions.filter(
+      (obj) => obj.stock.category.idCategory == props.route.params.idCategory
+    );
     setActiveWallet(walletLocal);
-    setAquisitions(walletStocks);
+    setAquisitions(aquisitions);
     setLoading(false);
   };
 

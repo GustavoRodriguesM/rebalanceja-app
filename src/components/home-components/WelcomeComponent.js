@@ -14,7 +14,7 @@ export default (props) => {
             justifyContent: "flex-end",
           }}
         >
-          <Badge
+          {/*<Badge
             size={10}
             style={{
               position: "absolute",
@@ -28,7 +28,7 @@ export default (props) => {
             color={useTheme().colors.primary}
             size={20}
             onPress={() => console.log("Pressed")}
-          />
+          />*/}
         </View>
       </View>
       <Text
